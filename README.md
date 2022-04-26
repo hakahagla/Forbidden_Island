@@ -1,4 +1,4 @@
-# Forbidden-island-thing
+# Forbidden Island
 # A project
 
 # Rules
