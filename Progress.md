@@ -5,3 +5,4 @@
 
 # 27th Apr 2022
 * Start created the various pages in tKinter
+* Camel case for variables, constants are in lowercase, classes is snake case
