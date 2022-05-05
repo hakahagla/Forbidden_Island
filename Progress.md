@@ -16,4 +16,12 @@
 * Problem: Background doesnt cover all of the layer above.
 * Difficulty and number of players, this is going to be outside of the main menu after pressing play.
 * Trying to spawn the map
-* 
+
+# 5th May 2022
+* Finished the menu
+* Leaving the options screen blank until such time as they can think of something to add to it.
+* Putting in imagery in to the main menu - Brandon
+* The difficuly menu - Assa
+* Designing the game board - Emmanuella
+* Placeholder tiles are in place for the game board
+* Next step is to create more placeholders for things such as flood cards, treasure cards etc.* 
