@@ -1,5 +1,6 @@
 # 4 July 2022
 * The charatcters can now move about
+* ---Assa
 
 
 # 24 June 2022
