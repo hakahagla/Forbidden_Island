@@ -1,7 +1,6 @@
-Turn
 Move
 Give
 Heli
 Sandbag
-Capture
-Characters
+Capture 
+Characters Abilities
