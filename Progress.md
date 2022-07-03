@@ -1,12 +1,3 @@
-# 4 July 2022
-* The charatcters can now move about
-* ---Assa
-
-
-# 24 June 2022
-* The Characters can now spwan in right locations
-* ---Assa
-
 # Step 3. Division of labour
 * **Emmanuella** - Main Menu
 * **Assa** - New Game Page
@@ -34,3 +25,12 @@
 * Designing the game board - Emmanuella
 * Placeholder tiles are in place for the game board
 * Next step is to create more placeholders for things such as flood cards, treasure cards etc.* 
+
+# 4 July 2022
+* The charatcters can now move about
+* ---Assa
+
+
+# 24 June 2022
+* The Characters can now spwan in right locations
+* ---Assa
