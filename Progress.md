@@ -1,3 +1,11 @@
+# 4 July 2022
+* The charatcters can now move about
+
+
+# 24 June 2022
+* The Characters can now spwan in right locations
+* ---Assa
+
 # Step 3. Division of labour
 * **Emmanuella** - Main Menu
 * **Assa** - New Game Page
