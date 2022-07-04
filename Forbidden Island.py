@@ -855,17 +855,14 @@ def Up():
     target = 'c' + str(CurrPlayer) + 'label'
     xvalue = globals()[target].winfo_x()
     yvalue = globals()[target].winfo_y()
-    if yvalue >= 120 and xvalue >= 400 and xvalue <= 500: #Movement of columns 3 and 4
-        yvalue -= 100
-        globals()[target].place(x = xvalue, y = yvalue)
+    if yvalue >= 120 and xvalue >= 400 and xvalue <= 500: #Movement of columns 3 and 4  
+        globals()[target].place(x = xvalue, y = yvalue - 100)
         ActionPoint -= 1
     elif yvalue >= 220 and xvalue >= 300 and xvalue <= 600: #Movement of columns 2 and 5
-        yvalue -= 100
-        globals()[target].place(x = xvalue, y = yvalue)
+        globals()[target].place(x = xvalue, y = yvalue - 100)
         ActionPoint -= 1
     elif yvalue >= 320 and xvalue >= 200 and xvalue <= 700: #Movement of columns 1 and 6
-        yvalue -= 100
-        globals()[target].place(x = xvalue, y = yvalue)
+        globals()[target].place(x = xvalue, y = yvalue - 100)
         ActionPoint -= 1
     else:
         tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
@@ -880,16 +877,13 @@ def Down():
     xvalue = globals()[target].winfo_x()
     yvalue = globals()[target].winfo_y()
     if yvalue <= 420 and xvalue >= 400 and xvalue <= 500:
-        yvalue += 100
-        globals()[target].place(x = xvalue, y = yvalue)
+        globals()[target].place(x = xvalue, y = yvalue + 100)
         ActionPoint -= 1
-    elif yvalue >= 320 and xvalue >= 300 and xvalue <= 600:
-        yvalue += 100
-        globals()[target].place(x = xvalue, y = yvalue)
+    elif yvalue <= 320 and xvalue >= 300 and xvalue <= 600:
+        globals()[target].place(x = xvalue, y = yvalue + 100)
         ActionPoint -= 1
-    elif yvalue >= 220 and xvalue >= 200 and xvalue <= 700:
-        yvalue -= 100
-        globals()[target].place(x = xvalue, y = yvalue)
+    elif yvalue <= 220 and xvalue >= 200 and xvalue <= 700:
+        globals()[target].place(x = xvalue, y = yvalue + 100)
         ActionPoint -= 1
     else:
         tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
@@ -904,16 +898,13 @@ def Left():
     xvalue = globals()[target].winfo_x()
     yvalue = globals()[target].winfo_y()
     if xvalue >= 300 and yvalue >= 220 and yvalue <= 320:
-        xvalue -= 100
-        globals()[target].place(x = xvalue, y = yvalue)
+        globals()[target].place(x = xvalue - 100, y = yvalue)
         ActionPoint -= 1
     elif xvalue >= 400 and yvalue >= 120 and yvalue <= 420:
-        xvalue -= 100
-        globals()[target].place(x = xvalue, y = yvalue)
+        globals()[target].place(x = xvalue - 100, y = yvalue)
         ActionPoint -= 1
     elif xvalue >= 500 and yvalue >= 20 and yvalue <= 520:
-        xvalue -= 100
-        globals()[target].place(x = xvalue, y = yvalue)
+        globals()[target].place(x = xvalue - 100, y = yvalue)
         ActionPoint -= 1
     else:
            tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
@@ -928,16 +919,13 @@ def Right():
     xvalue = globals()[target].winfo_x()
     yvalue = globals()[target].winfo_y()
     if xvalue <= 600 and yvalue >= 220 and yvalue <= 320:
-        xvalue += 100
-        globals()[target].place(x = xvalue, y = yvalue)
+        globals()[target].place(x = xvalue + 100, y = yvalue)
         ActionPoint -= 1
     elif xvalue <= 500 and yvalue >= 120 and yvalue <= 420:
-        xvalue += 100
-        globals()[target].place(x = xvalue, y = yvalue)
+        globals()[target].place(x = xvalue + 100, y = yvalue)
         ActionPoint -= 1
     elif xvalue <= 400 and yvalue >= 20 and yvalue <= 520:
-        xvalue += 100
-        globals()[target].place(x = xvalue, y = yvalue)
+        globals()[target].place(x = xvalue + 100, y = yvalue)
         ActionPoint -= 1
     else:
            tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
@@ -1084,13 +1072,13 @@ UpButton = Button(gamepage, text = 'Up', command = Up)
 UpButton.place(x = 700, y = 600)
 
 DownButton = Button(gamepage, text = 'Down', command = Down)
-DownButton.place(x = 650, y = 640)
+DownButton.place(x = 730, y = 600)
 
 LeftButton = Button(gamepage, text = 'Left', command = Left)
-LeftButton.place(x = 750, y = 620)
+LeftButton.place(x = 700, y = 620)
 
 RightButton = Button(gamepage, text = 'Right', command = Right)
-RightButton.place(x = 700, y = 620)
+RightButton.place(x = 730, y = 620)
 
 watertick = Label(gamepage,image=water0)
 watertick.place(x = 900,y=0)
