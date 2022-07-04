@@ -4,7 +4,7 @@
 #Information
 #There are 24tiles
 #6 characters(Diver,Engineer,Explorer,Messenger,Navigator&Pilot)
-#28 Treasure Cards in Total: 5 Fire ,5 Lion ,5Glode ,5 Cup,2 SandBag, 3 HelicopterLift, 3 WatersRise
+#28 Treasure Cards in Total: 5 Fire ,5 Lion ,5Globe ,5 Cup,2 SandBag, 3 HelicopterLift, 3 WatersRise
 #Flood cards 1 of each tile
 #Start location: Pilot(Blue) - Fools Landing, Engineer(Red) - Bronze Gate, Messenger(White) - Silver Gate, Diver(Black) - Iron Gate, Explorer(Green) - Copper Gate
                         #Navigator(Gold) - Gold Gate
@@ -29,6 +29,7 @@ from tkinter import ttk
 from tkinter.simpledialog import askstring
 from tkinter.messagebox import askyesno
 from tkinter.messagebox import showwarning
+from xml.etree.ElementTree import C14NWriterTarget
 from PIL import Image,ImageTk
 import random
 
@@ -654,9 +655,11 @@ def page7():
     pic.configure(image = pic7)
 def page8():
     pic.configure(image = pic8)
+
 #------------------------------------------------------------------------------------------------------------------------------------
 def startrules():
     rulewindow.deiconify()
+
 #------------------------------------------------------------------------------------------------------------------------------------
 def SpawnPlayers():
     #Creates the players and assign them roles
@@ -824,7 +827,6 @@ def SpawnPlayers():
                         c4label = Label(gamepage,width = '5', height = '2', bg = 'blue')
                         c4label.place(x=xvalue+50,y=yvalue+50)
                     break
- 
     #Top Left of tile is always C1
     #Top Right of tile is always C2
     #Bottom Left of tile is always C3
@@ -875,7 +877,7 @@ def Down():
     global c4label
     target = 'c' + str(CurrPlayer) + 'label'
     xvalue = globals()[target].winfo_x()
-    yvalue = globals()[target].winfo_y()
+    yvalue = globals()[target].winfo_y()  
     if yvalue <= 420 and xvalue >= 400 and xvalue <= 500:
         globals()[target].place(x = xvalue, y = yvalue + 100)
         ActionPoint -= 1
@@ -929,7 +931,23 @@ def Right():
         ActionPoint -= 1
     else:
            tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-    
+
+#------------------------------------------------------------------------------------------------------------------------------------
+def Give():
+    global ActionPoint
+    global CurrPlayer
+    global c1label
+    global c2label
+    global c3label
+    global c4label
+    target = 'c'+ str(CurrPlayer) + 'label'
+    #Might need multiple targets
+    #Check number of players in a tile
+        #If > 2,identify which player they are
+        #If = 2,target will be the other person
+        #Give a card
+    #Check card limit
+    ActionPoint -= 1
     
 #------------------------------------------------------------------------------------------------------------------------------------
 def getinput():
@@ -1080,6 +1098,9 @@ LeftButton.place(x = 700, y = 620)
 RightButton = Button(gamepage, text = 'Right', command = Right)
 RightButton.place(x = 730, y = 620)
 
+GiveButton = Button(gamepage, text = 'Give', command = Give)
+GiveButton.place(x = 780, y = 600)
+
 watertick = Label(gamepage,image=water0)
 watertick.place(x = 900,y=0)
 
@@ -1226,42 +1247,42 @@ TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
 TileOrder.append(temptilename)
 mapcard19=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
-mapcard19.place(x=300 , y= 425)
+mapcard19.place(x=300 , y= 420)
 #Row5x2
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
 TileOrder.append(temptilename)
 mapcard20=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
-mapcard20.place(x=400 , y= 425)
+mapcard20.place(x=400 , y= 420)
 #Row5x3
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
 TileOrder.append(temptilename)
 mapcard21=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
-mapcard21.place(x=500 , y= 425)
+mapcard21.place(x=500 , y= 420)
 #Row5x4
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
 TileOrder.append(temptilename)
 mapcard22=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image=globals()[temptilename], text=temptilename)
-mapcard22.place(x=600 , y= 425)
+mapcard22.place(x=600 , y= 420)
 #Row6x1
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
 TileOrder.append(temptilename)
 mapcard23=tk.Label(gamepage, borderwidth = 2,  relief = "solid", image=globals()[temptilename], text=temptilename)
-mapcard23.place(x=400 , y= 530)
+mapcard23.place(x=400 , y= 520)
 #Row6x2
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
 TileOrder.append(temptilename)
 mapcard24=tk.Label(gamepage, borderwidth = 2,  relief = "solid", image=globals()[temptilename], text=temptilename)
-mapcard24.place(x=500 , y= 530)
+mapcard24.place(x=500 , y= 520)
 
 #Rulepage Setup------------------------------------------------------------------------------------------------------------------------------------  
 #p1 = Page 1
