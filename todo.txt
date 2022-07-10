@@ -1,6 +1,8 @@
-Move
-Give
 Heli
 Sandbag
-Capture 
+Capture
+Remove Tiles
+Move - Empty Tiles
 Characters Abilities
+Check cycling cards
+
