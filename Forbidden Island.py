@@ -1,5 +1,5 @@
 #Forbidden Island
-#Last updated: 2022/7/4
+#Last updated: 2022/7/11
 
 #Information
 #There are 24tiles
@@ -20,6 +20,9 @@
 #Diver: Move through 1 of more adjacent flooded and/or missing tiles for 1 action.(Must end your turn on a tile)
 #Explorer:Move and/or shore up diagonally.
 #Navigator: Move another player up to 2 adjacent tiles for 1 action
+
+#CurrPlayer = tCounter + 1
+#CurrPlayer is same as tCounter
 
 
 #Imports--------------------------------------------------------------------------------------------------------------------
@@ -53,7 +56,6 @@ NumFlood = 0
 ActionPoint = 3
 
 #Variables------------------------------------------------------------------------------------------------------------------------------------
-
 
 tCounter = 0 #Treasure Counter
 C1 = [] #Character1 Cards
@@ -354,7 +356,8 @@ def DrawTreasure():
     global NumPlayers
     global FloodDiscard
     global WaterTick
-    global tCounter #Treasure Counter
+    global CurrPlayer
+    global ActionPoint
     firstCard = random.randint(0, len(TreasureCards)-1)
     secondCard = random.randint(0, len(TreasureCards)-1)
     if TreasureCards[firstCard] == "WatersRise":
@@ -373,16 +376,17 @@ def DrawTreasure():
         SetWaterMark()
         ChangeWaterMark()
         changeFloodCardNum()
-
-    if tCounter == 3:
+#Append Card
+    if CurrPlayer == 4:
         if TreasureCards[firstCard] != 'WatersRise':
             C4.append(TreasureCards[firstCard])
             DiscardSelect()
         if TreasureCards[secondCard] != 'WatersRise':
             C4.append(TreasureCards[secondCard])
             DiscardSelect()
-        tCounter = 0
-    elif tCounter == 2:
+        CurrPlayer = 1
+        ActionPoint = 3
+    elif CurrPlayer == 3:
         if TreasureCards[firstCard] != 'WatersRise':
             C3.append(TreasureCards[firstCard])
             DiscardSelect()
@@ -390,10 +394,11 @@ def DrawTreasure():
             C3.append(TreasureCards[secondCard])
             DiscardSelect()
         if NumPlayers == 3:
-            tCounter = 0
+            CurrPlayer = 1
         else:
-            tCounter +=1
-    elif tCounter == 1:
+            CurrPlayer +=1
+        ActionPoint = 3
+    elif CurrPlayer == 2:
         if TreasureCards[firstCard] != 'WatersRise':
             C2.append(TreasureCards[firstCard])
             DiscardSelect()
@@ -401,21 +406,27 @@ def DrawTreasure():
             C2.append(TreasureCards[secondCard])
             DiscardSelect()
         if NumPlayers == 2:
-            tCounter = 0
+            CurrPlayer = 1
         else:
-            tCounter += 1
-    elif tCounter == 0:
+            CurrPlayer += 1
+        ActionPoint = 3
+    elif CurrPlayer == 1:
         if TreasureCards[firstCard] != 'WatersRise':
             C1.append(TreasureCards[firstCard])
             DiscardSelect()
         if TreasureCards[secondCard] != 'WatersRise':
             C1.append(TreasureCards[secondCard])
             DiscardSelect()
-        tCounter += 1
+        CurrPlayer += 1
+        ActionPoint = 3
     print("Character 1 Cards: ",C1)
+    print()
     print("Character 2 Cards: ",C2)
+    print()
     print("Character 3 Cards: ",C3)
+    print()
     print("Character 4 Cards: ",C4) 
+    print('--------------------------------------')
 #------------------------------------------------------------------------------------------------------------------------------------
 def FloodDeckDraw():
     #FloodCard Num
@@ -614,20 +625,20 @@ def SetWaterMark():
     random.shuffle(FloodDiscard)
 #------------------------------------------------------------------------------------------------------------------------------------
 def DiscardSelect():
-    global tCounter
-    while tCounter == 0 and len(C1) > 5:
+    global CurrPlayer
+    while len(C1) > 5:
         unwanted = askstring(title="Discard",prompt='Player 1:' +str(C1))
         C1.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while tCounter == 1 and len(C1) > 5:
+    while len(C1) > 5:
         unwanted = askstring(title="Discard",prompt='Player 2:' +str(C2))
         C2.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while tCounter == 2 and len(C3) > 5:
+    while len(C3) > 5:
         unwanted = askstring(title="Discard",prompt='Player 3:' +str(C3))
         C3.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while tCounter == 3 and len(C4) > 5:
+    while len(C4) > 5:
         unwanted = askstring(title="Discard",prompt='Player 4:' +str(C4))
         C4.remove(unwanted)
         TreasureDiscard.append(unwanted)
@@ -673,6 +684,7 @@ def SpawnPlayers():
     global c2label
     global c3label
     global c4label
+    global characterOrder
     characterOrder = []
     LocalCharacters = Characters[:]
     if NumPlayers == 2:
@@ -711,7 +723,6 @@ def SpawnPlayers():
         x = random.randint(0,len(LocalCharacters)-1)
         C4Char = LocalCharacters[x]
         characterOrder.append(LocalCharacters[x])
-    print(characterOrder)
     for i in range (0,len(characterOrder)):
         if characterOrder[i] == 'Navigator':
             for j in range (1,25):
@@ -831,20 +842,6 @@ def SpawnPlayers():
     #Top Right of tile is always C2
     #Bottom Left of tile is always C3
     #Bottom Right of tile is always C4
-
-#------------------------------------------------------------------------------------------------------------------------------------
-def PlayerSwitch():
-    global CurrPlayer
-    global ActionPoint
-    ActionPoint = 3
-    if CurrPlayer == 1:
-        CurrPlayer +=1
-    elif CurrPlayer == 2:
-        CurrPlayer += 1
-    elif CurrPlayer == 3:
-        CurrPlayer += 1
-    elif CurrPlayer == 4:
-        CurrPlayer = 1
         
 #------------------------------------------------------------------------------------------------------------------------------------
 def Up():
@@ -934,20 +931,98 @@ def Right():
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def Give():
+    #One card per action point
+    global C1
+    global C2
+    global C3
+    global C4
+    global tCounter
     global ActionPoint
     global CurrPlayer
     global c1label
     global c2label
     global c3label
     global c4label
-    target = 'c'+ str(CurrPlayer) + 'label'
-    #Might need multiple targets
-    #Check number of players in a tile
-        #If > 2,identify which player they are
-        #If = 2,target will be the other person
-        #Give a card
-    #Check card limit
-    ActionPoint -= 1
+    global NumPlayers
+    temparray = [] #Array to store players thats in the same tile
+    target = 'c'+ str(CurrPlayer) + 'label' #label of current player
+    xvalue = globals()[target].winfo_x()
+    yvalue = globals()[target].winfo_y()
+    for i in range(1,NumPlayers+1): 
+        #Check all the labels and see if they are in the same tile as current player
+        temp = 'c' + str(i) + 'label' #label of other players
+        xtemp = globals()[temp].winfo_x()
+        ytemp = globals()[temp].winfo_y()
+        #Find Current Player Card Array
+        if CurrPlayer == 1:
+            targetdeck = 'C1'
+            if xtemp == xvalue + 50 and ytemp == yvalue: #Player1 - Player2
+                temparray.append('Player2')
+            elif ytemp == yvalue + 50 and xtemp == xvalue: #Player1 - Player3 
+                temparray.append('Player3')
+            elif ytemp == yvalue + 50 and xtemp == xvalue + 50: #Player1 - Player4
+                temparray.append('Player4')
+        elif CurrPlayer == 2:
+            targetdeck = 'C2'
+            if xtemp == xvalue - 50 and ytemp == yvalue: #Player2 - Player1
+                temparray.append('Player1')
+            elif ytemp == yvalue + 50 and xtemp == xvalue - 50: #Player2 - Player3 
+                temparray.append('Player3')
+            elif ytemp == yvalue + 50 and xtemp == xvalue: #Player2 - Player4
+                temparray.append('Player4')
+        elif CurrPlayer == 3:
+            targetdeck = 'C3'
+            if xtemp == xvalue  and ytemp == yvalue - 50: #Player3 - Player1
+                temparray.append('Player1')
+            elif ytemp == yvalue - 50 and xtemp == xvalue + 50: #Player3 - Player2
+                temparray.append('Player2')
+            elif ytemp == yvalue and xtemp == xvalue + 50: #Player3 - Player4
+                temparray.append('Player4')
+        elif CurrPlayer == 4:
+            targetdeck = 'C4'
+            if xtemp == xvalue - 50 and ytemp == yvalue - 50: #Player4 - Player1
+                temparray.append('Player1')
+            elif ytemp == yvalue - 50 and xtemp == xvalue: #Player4 - Player2
+                temparray.append('Player2')
+            elif ytemp == yvalue and xtemp == xvalue - 50: #Player4 - Player3
+                temparray.append('Player3')
+    if len(temparray) != 0:
+        if len(temparray) > 1: #Select the playter to give card to
+            tplayer = askstring (title='Give', prompt='Select target:' + str(temparray))#tplayer is the target player
+        else:
+            tplayer = temparray[0]
+        while True:
+            if tplayer.upper() == 'PLAYER1':
+                targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                if targetcard != '':
+                    globals()[targetdeck].remove(targetcard)
+                    C1.append(targetcard)
+                    DiscardSelect()
+                break
+            elif tplayer.upper() == 'PLAYER2':
+                targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                if targetcard != '':
+                    globals()[targetdeck].remove(targetcard)
+                    C2.append(targetcard)
+                    DiscardSelect()
+                break
+            elif tplayer.upper() == 'PLAYER3':
+                targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                if targetcard != '':
+                    globals()[targetdeck].remove(targetcard)
+                    C3.append(targetcard)
+                    DiscardSelect()
+                break
+            elif tplayer.upper() == 'PLAYER4':
+                targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                if targetcard != '':
+                    globals()[targetdeck].remove(targetcard)
+                    C4.append(targetcard)
+                    DiscardSelect()
+                break
+            else:
+                tplayer = askstring (title='Give', prompt='Select target:' + str(temparray))#tplayer is the target player
+        ActionPoint -= 1
     
 #------------------------------------------------------------------------------------------------------------------------------------
 def getinput():
@@ -957,7 +1032,7 @@ def getinput():
     global C2Char
     global C3Char
     global C4Char
-    Difficulty = difficultyvariable.get() ## 1 = Beginner, 2 = Novice, 3 = Medium, 4 = Hard, 5 = Legendary
+    Difficulty = difficultyvariable.get() # 1 = Beginner, 2 = Novice, 3 = Medium, 4 = Hard, 5 = Legendary
     NumPlayers = playernumvariable.get() #  2 = 2 players, 3 = 3 players, 4 = 4 players
 
     #Dealing Cards to Players
