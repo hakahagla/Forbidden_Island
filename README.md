@@ -56,4 +56,5 @@ Division of labour
 
 # 12 July 2022
 * Now Can SandBag
+* Removed Array - TileOrder as it is the same as CurrentGameTile
 * ---Assa
