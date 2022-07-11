@@ -1,34 +1,34 @@
 #Forbidden Island
 #Last updated: 2022/7/11
 
-#Information
-#There are 24tiles
-#6 characters(Diver,Engineer,Explorer,Messenger,Navigator&Pilot)
-#28 Treasure Cards in Total: 5 Fire ,5 Lion ,5Globe ,5 Cup,2 SandBag, 3 HelicopterLift, 3 WatersRise
-#Flood cards 1 of each tile
-#Start location: Pilot(Blue) - Fools Landing, Engineer(Red) - Bronze Gate, Messenger(White) - Silver Gate, Diver(Black) - Iron Gate, Explorer(Green) - Copper Gate
-                        #Navigator(Gold) - Gold Gate
-#CupTiles: Tidal Palace, Coral Palace
-#GlobeTiles: Temple of The Sun, Temple of the Moon
-#LionTiles: Whispering Garden, Howling Garden
-#FireTiles: Cave of Shadows, Cave of Embers
+'''
+Information
+There are 24tiles
+6 characters(Diver,Engineer,Explorer,Messenger,Navigator&Pilot)
+28 Treasure Cards in Total: 5 Fire ,5 Lion ,5Globe ,5 Cup,2 SandBag, 3 HelicopterLift, 3 WatersRise
+Flood cards 1 of each tile
+Start location: Pilot(Blue) - Fools Landing, Engineer(Red) - Bronze Gate, Messenger(White) - Silver Gate, Diver(Black) - Iron Gate, Explorer(Green) - Copper Gate
+                        Navigator(Gold) - Gold Gate
+CupTiles: Tidal Palace, Coral Palace
+GlobeTiles: Temple of The Sun, Temple of the Moon
+LionTiles: Whispering Garden, Howling Garden
+FireTiles: Cave of Shadows, Cave of Embers
 
-#Ability descriptions
-#Pilot: Once per turn, fly to any tile on the island for 1 action
-#Engineer: Shore up 2 tiles for 1 action
-#Messenger: Give Treasure cards to a player anywhere on the island for 1 action per card
-#Diver: Move through 1 of more adjacent flooded and/or missing tiles for 1 action.(Must end your turn on a tile)
-#Explorer:Move and/or shore up diagonally.
-#Navigator: Move another player up to 2 adjacent tiles for 1 action
-
-#CurrPlayer = tCounter + 1
-#CurrPlayer is same as tCounter
+Ability descriptions
+Pilot: Once per turn, fly to any tile on the island for 1 action
+Engineer: Shore up 2 tiles for 1 action
+Messenger: Give Treasure cards to a player anywhere on the island for 1 action per card
+Diver: Move through 1 of more adjacent flooded and/or missing tiles for 1 action.(Must end your turn on a tile)
+Explorer:Move and/or shore up diagonally.
+Navigator: Move another player up to 2 adjacent tiles for 1 action
 
 #Ctrl M O Collapse All
 #Ctrl M L Unfold All
+'''
 
 #Imports--------------------------------------------------------------------------------------------------------------------
 from calendar import c
+from sqlite3 import Cursor
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
@@ -60,7 +60,6 @@ ActionPoint = 3
 
 #Variables------------------------------------------------------------------------------------------------------------------------------------
 
-tCounter = 0 #Treasure Counter
 C1 = [] #Character1 Cards
 C2 = []
 C3 = []
@@ -73,17 +72,15 @@ Difficulty = 0
 NumPlayers = 0
 UnacquiredItems = ['TheCrystalOfFire','TheStatueOfTheWind','TheOceansChalice','TheEarthStone']
 AcquiredItems = []
-CurrentGameTile = []
+CurrentGameTile = []#Stores the cards in order 1 to 25
 CurrentCharacter = []
 CurrPlayer = 1
-CurrentFlood = TileNames[:] #Current Ingame Flood Tiles
-TileOrder = []
+CurrentFlood = TileNames[:] #Current Flood Cards to draw from
 FloodDiscard = [] #Ingame Discard Pile
 HalfFlooded = [] #Currently HalfFlooded
 #28 Treasure Cards in Total: 5 Fire ,5 Lion ,5Globe ,5 Cup,2 SandBag, 3 HelicopterLift, 3 WatersRise
 TreasureDiscard = []
-InPlay = [] #Characters Inplay
-WaterTick=0
+WaterTick = 0
 FloodCardNum = 2 #Number of flood card to be drawn
 
 #Image Import------------------------------------------------------------------------------------------------------------------------------------
@@ -361,6 +358,7 @@ def DrawTreasure():
     global WaterTick
     global CurrPlayer
     global ActionPoint
+    global CurrentFlood
     firstCard = random.randint(0, len(TreasureCards)-1)
     secondCard = random.randint(0, len(TreasureCards)-1)
     if TreasureCards[firstCard] == "WatersRise":
@@ -547,58 +545,58 @@ def changeFloodCardNum():
 #------------------------------------------------------------------------------------------------------------------------------------
 def changeFloodTile():
     global FloodDiscard
-    global TileOrder
+    global CurrentGameTile
     for x in range(1,24):
         for y in range(0,len(FloodDiscard)):
-            if HalfFlooded[y] == TileOrder[x]:
+            if HalfFlooded[y] == CurrentGameTile[x]:
                 target = 'mapcard' + str(x+1)
-                if TileOrder[x] == 'WhisperingGardens':
+                if CurrentGameTile[x] == 'WhisperingGardens':
                     globals()[target].configure(image = WhisperingGardensF)
-                elif TileOrder[x] == 'WatchTower':
+                elif CurrentGameTile[x] == 'WatchTower':
                     globals()[target].configure(image = WatchTowerF)                    
-                elif TileOrder[x] == 'TwilightHollow':
+                elif CurrentGameTile[x] == 'TwilightHollow':
                     globals()[target].configure(image = TwilightHollowF)
-                elif TileOrder[x] == 'TidalPalace':
+                elif CurrentGameTile[x] == 'TidalPalace':
                     globals()[target].configure(image = TidalPalaceF)
-                elif TileOrder[x] == 'TempleOfTheSun':
+                elif CurrentGameTile[x] == 'TempleOfTheSun':
                     globals()[target].configure(image = TempleOfTheSunF)
-                elif TileOrder[x] == 'TempleOfTheMoon':
+                elif CurrentGameTile[x] == 'TempleOfTheMoon':
                     globals()[target].configure(image = TempleOfTheMoonF)
-                elif TileOrder[x] == 'SilverGate':
+                elif CurrentGameTile[x] == 'SilverGate':
                     globals()[target].configure(image = SilverGateF)
-                elif TileOrder[x] == 'PhantomRock':
+                elif CurrentGameTile[x] == 'PhantomRock':
                     globals()[target].configure(image = PhantomRockF)
-                elif TileOrder[x] == 'Observatory':
+                elif CurrentGameTile[x] == 'Observatory':
                     globals()[target].configure(image = ObservatoryF)
-                elif TileOrder[x] == 'MistyMarsh':
+                elif CurrentGameTile[x] == 'MistyMarsh':
                     globals()[target].configure(image = MistyMarshF)
-                elif TileOrder[x] == 'LostLagoon':
+                elif CurrentGameTile[x] == 'LostLagoon':
                     globals()[target].configure(image = LostLagoonF)
-                elif TileOrder[x] == 'IronGate':
+                elif CurrentGameTile[x] == 'IronGate':
                     globals()[target].configure(image = IronGateF)
-                elif TileOrder[x] == 'HowlingGardens':
+                elif CurrentGameTile[x] == 'HowlingGardens':
                     globals()[target].configure(image = HowlingGardensF)
-                elif TileOrder[x] == 'GoldGate':
+                elif CurrentGameTile[x] == 'GoldGate':
                     globals()[target].configure(image = GoldGateF)
-                elif TileOrder[x] == 'FoolsLanding':
+                elif CurrentGameTile[x] == 'FoolsLanding':
                     globals()[target].configure(image = FoolsLandingF)
-                elif TileOrder[x] == 'DunesOfDeception':
+                elif CurrentGameTile[x] == 'DunesOfDeception':
                     globals()[target].configure(image = DunesOfDeceptionF)
-                elif TileOrder[x] == 'CrimsonForest':
+                elif CurrentGameTile[x] == 'CrimsonForest':
                     globals()[target].configure(image = CrimsonForestF)
-                elif TileOrder[x] == 'CoralPalace':
+                elif CurrentGameTile[x] == 'CoralPalace':
                     globals()[target].configure(image = CoralPalaceF)
-                elif TileOrder[x] == 'CopperGate':
+                elif CurrentGameTile[x] == 'CopperGate':
                     globals()[target].configure(image = CopperGateF)
-                elif TileOrder[x] == 'CliffsOfAbandon':
+                elif CurrentGameTile[x] == 'CliffsOfAbandon':
                     globals()[target].configure(image = CliffsOfAbandonF)
-                elif TileOrder[x] == 'CaveOfShadows':
+                elif CurrentGameTile[x] == 'CaveOfShadows':
                     globals()[target].configure(image = CaveOfShadowsF)
-                elif TileOrder[x] == 'CaveOfEmbers':
+                elif CurrentGameTile[x] == 'CaveOfEmbers':
                     globals()[target].configure(image = CaveOfEmbersF)
-                elif TileOrder[x] == 'BronzeGate':
+                elif CurrentGameTile[x] == 'BronzeGate':
                     globals()[target].configure(image = BronzeGateF)
-                elif TileOrder[x] == 'BreakersBridge':
+                elif CurrentGameTile[x] == 'BreakersBridge':
                     globals()[target].configure(image = BreakersBridgeF)
 #------------------------------------------------------------------------------------------------------------------------------------                    
 def ChangeWaterMark():
@@ -1024,7 +1022,7 @@ def Give():
                     DiscardSelect()
                 break
             else:
-                tplayer = askstring (title='Give', prompt='Select target:' + str(temparray))#tplayer is the target player
+                tplayer = askstring (title='Give', prompt='Select target:' + str(temparray))
         ActionPoint -= 1
 
 #------------------------------------------------------------------------------------------------------------------------------------
@@ -1055,33 +1053,78 @@ def Heli():
     
 #------------------------------------------------------------------------------------------------------------------------------------
 def Sand():
+    global HalfFlooded
+    target = '1'
+    while target != '' :
+        target = askstring(title = 'Enter Tile', prompt = 'Select One:' + str(HalfFlooded))
+        if target in HalfFlooded and len(HalfFlooded) > 1:
+            HalfFlooded.remove(target)
+            for i in range(1,25):
+                temp = 'mapcard' + str(i)
+                if globals()[temp].cget('text') == target:
+                    globals()[temp].configure(image = globals()[target])
+            break
+        else:
+            tk.messagebox.showwarning(message = 'Not available')
+#SandBag's for loop needs amending. If one mapcard is out of play (FullFlooded), the for loop will cause error.
+#Potentially have an array storing the numbers available.
+#This will affect other subprograms aswell
+
+#------------------------------------------------------------------------------------------------------------------------------------
+def Capture(): #For taking treasure cards
     pass
 #------------------------------------------------------------------------------------------------------------------------------------
 def UseCard():
     global CurrPlayer
+    global TreasureDiscard
     while True:
         if CurrPlayer == 1:
             global C1
             targetcard = askstring (title='Use Card', Prompt='Choose a card' + str(C1))
-            C1.remove(targetcard)
+            if targetcard.lower() == 'helicopterlift' and 'HelicopterLift' in C1:
+                Heli()
+                C1.remove(targetcard)
+                TreasureDiscard.append(targetcard)
+            elif targetcard.lower() == 'sandbag' and 'SandBag' in C1:
+                Sand()
+                C1.remove(targetcard)
+                TreasureDiscard.append(targetcard)
         elif CurrPlayer == 2:
             global C2
             targetcard = askstring (title='Use Card', Prompt='Choose a card' + str(C2))
-            C2.remove(targetcard)
+            if targetcard.lower() == 'helicopterlift' and 'HelicopterLift' in C2:
+                Heli()
+                C2.remove(targetcard)
+                TreasureDiscard.append(targetcard)
+            elif targetcard.lower() == 'sandbag' and 'SandBag' in C2:
+                Sand()
+                C2.remove(targetcard)
+                TreasureDiscard.append(targetcard)
         elif CurrPlayer == 3:
             global C3
             targetcard = askstring (title='Use Card', Prompt='Choose a card' + str(C3))
-            C3.remove(targetcard)
+            if targetcard.lower() == 'helicopterlift' and 'HelicopterLift' in C3:
+                Heli()
+                C3.remove(targetcard)
+                TreasureDiscard.append(targetcard)
+            elif targetcard.lower() == 'sandbag' and 'SandBag' in C3 :
+                Sand()
+                C3.remove(targetcard)
+                TreasureDiscard.append(targetcard)
         elif CurrPlayer == 4:
             global C4
             targetcard = askstring (title='Use Card', Prompt='Choose a card' + str(C4))
-            C4.remove(targetcard)
+            if targetcard.lower() == 'helicopterlift'and 'HelicopterLift' in C4:
+                Heli()
+                C4.remove(targetcard)
+                TreasureDiscard.append(targetcard)
+            elif targetcard.lower() == 'sandbag' and 'SandBag' in C4:
+                Sand()
+                C4.remove(targetcard)
+                TreasureDiscard.append(targetcard)
         if targetcard != '':
             break
-    if targetcard.lower() == 'helicopterlift':
-        Heli()
-    elif targetcard.lower() == 'sandbag':
-        Sand()
+
 
 
 #------------------------------------------------------------------------------------------------------------------------------------
@@ -1259,14 +1302,12 @@ gameback.place(x=0,y=0)
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard1=tk.Label(gamepage, borderwidth = 2, relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard1.place(x= 400 , y= 20)
 #Row 1x2
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard2=tk.Label(gamepage, borderwidth = 2, relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard2.place(x= 500 , y= 20)
 #Row2x1
@@ -1275,28 +1316,24 @@ ycoor = 120
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard3=tk.Label(gamepage,borderwidth = 2, relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard3.place(x=300 , y= 120)
 #Row2x2
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard4=tk.Label(gamepage,borderwidth = 2, relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard4.place(x=400 , y= 120)
 #Row2x3
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard5=tk.Label(gamepage,borderwidth = 2, relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard5.place(x=500 , y= 120)
 #Row2x4
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard6=tk.Label(gamepage,borderwidth = 2, relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard6.place(x=600 , y= 120)
 xcoor = xcoor+100
@@ -1306,42 +1343,36 @@ ycoor = 220
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard7=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard7.place(x=200 , y= 220)
 #Row3x2
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard8=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
 mapcard8.place(x=300 , y= 220)
 #Row3x3
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard9=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard9.place(x=400 , y= 220)
 #Row3x4
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard10=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard10.place(x=500 , y= 220)
 #Row3x5
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard11=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
 mapcard11.place(x=600 , y= 220)
 #Row3x6
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard12=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
 mapcard12.place(x=700 , y= 220)
 #Row4x1
@@ -1350,86 +1381,76 @@ ycoor = 320
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard13=tk.Label(gamepage,borderwidth = 2, relief = "solid", image= globals()[temptilename], text=temptilename)
 mapcard13.place(x=200 , y= 320)
 #Row4x2
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard14=tk.Label(gamepage,borderwidth = 2, relief = "solid", image= globals()[temptilename], text=temptilename)
 mapcard14.place(x=300 , y= 320)
 #Row4x3
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard15=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
 mapcard15.place(x=400 , y= 320)
 #Row4x4
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard16=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
 mapcard16.place(x=500 , y= 320)
 #Row4x5
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard17=tk.Label(gamepage,borderwidth = 2, relief = "solid",image= globals()[temptilename], text=temptilename)
 mapcard17.place(x=600 , y= 320)
 #Row4x6
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard18=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
 mapcard18.place(x=700 , y= 320)
 #Row5x1
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard19=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
 mapcard19.place(x=300 , y= 420)
 #Row5x2
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard20=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
 mapcard20.place(x=400 , y= 420)
 #Row5x3
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard21=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image= globals()[temptilename], text=temptilename)
 mapcard21.place(x=500 , y= 420)
 #Row5x4
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard22=tk.Label(gamepage,borderwidth = 2,  relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard22.place(x=600 , y= 420)
 #Row6x1
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard23=tk.Label(gamepage, borderwidth = 2,  relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard23.place(x=400 , y= 520)
 #Row6x2
 temptilename = random.choice(TileNames)
 TileNames.remove(temptilename)
 CurrentGameTile.append(temptilename)
-TileOrder.append(temptilename)
 mapcard24=tk.Label(gamepage, borderwidth = 2,  relief = "solid", image=globals()[temptilename], text=temptilename)
 mapcard24.place(x=500 , y= 520)
+
+
 
 #Rulepage Setup------------------------------------------------------------------------------------------------------------------------------------  
 #p1 = Page 1

@@ -1,10 +1,9 @@
-Sandbag
 Capture
 Remove Tiles
 Move - Empty Tiles
 Characters Abilities
 Check cycling cards
-
+Turn
 
 fix issues listed in problems.txt
 
