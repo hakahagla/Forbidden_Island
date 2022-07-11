@@ -1,8 +1,10 @@
-Heli
 Sandbag
 Capture
 Remove Tiles
 Move - Empty Tiles
 Characters Abilities
 Check cycling cards
+
+
+fix issues listed in problems.txt
 

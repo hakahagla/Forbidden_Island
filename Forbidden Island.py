@@ -24,8 +24,11 @@
 #CurrPlayer = tCounter + 1
 #CurrPlayer is same as tCounter
 
+#Ctrl M O Collapse All
+#Ctrl M L Unfold All
 
 #Imports--------------------------------------------------------------------------------------------------------------------
+from calendar import c
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
@@ -1023,7 +1026,64 @@ def Give():
             else:
                 tplayer = askstring (title='Give', prompt='Select target:' + str(temparray))#tplayer is the target player
         ActionPoint -= 1
+
+#------------------------------------------------------------------------------------------------------------------------------------
+def Heli():
+    global CurrPlayer
+    global CurrentGameTile
+    target = 'c' + str(CurrPlayer) + 'label'
+    #Need to amend Heli() for taking off to win the game. Do this after having a treasure count to count the items acquired.
+    #Leads into if statement
+    while True:
+        destination = askstring (title= 'Enter Destination', prompt= 'Enter Destination')
+        if destination in CurrentGameTile:
+            break
+    for i in range (1,25):
+        tiletarget = 'mapcard' + str(i)
+        if globals()[tiletarget].cget('text').lower() == destination.lower():
+            xvalue = globals()[tiletarget].winfo_x()
+            yvalue = globals()[tiletarget].winfo_y()
+    if CurrPlayer == 1:
+        globals()[target].place(x = xvalue, y = yvalue)
+    elif CurrPlayer == 2:
+        globals()[target].place(x = xvalue + 50, y = yvalue)
+    elif CurrPlayer == 3:
+        globals()[target].place(x = xvalue, y = yvalue + 50)
+    elif CurrPlayer == 4:
+        globals()[target].place(x = xvalue + 50, y = yvalue + 50)
+
     
+#------------------------------------------------------------------------------------------------------------------------------------
+def Sand():
+    pass
+#------------------------------------------------------------------------------------------------------------------------------------
+def UseCard():
+    global CurrPlayer
+    while True:
+        if CurrPlayer == 1:
+            global C1
+            targetcard = askstring (title='Use Card', Prompt='Choose a card' + str(C1))
+            C1.remove(targetcard)
+        elif CurrPlayer == 2:
+            global C2
+            targetcard = askstring (title='Use Card', Prompt='Choose a card' + str(C2))
+            C2.remove(targetcard)
+        elif CurrPlayer == 3:
+            global C3
+            targetcard = askstring (title='Use Card', Prompt='Choose a card' + str(C3))
+            C3.remove(targetcard)
+        elif CurrPlayer == 4:
+            global C4
+            targetcard = askstring (title='Use Card', Prompt='Choose a card' + str(C4))
+            C4.remove(targetcard)
+        if targetcard != '':
+            break
+    if targetcard.lower() == 'helicopterlift':
+        Heli()
+    elif targetcard.lower() == 'sandbag':
+        Sand()
+
+
 #------------------------------------------------------------------------------------------------------------------------------------
 def getinput():
     global NumPlayers
@@ -1160,7 +1220,7 @@ FloodButton.place(x = 100, y = 600)
 TreasureButton= Button(gamepage, image=hearthstone,command= DrawTreasure,borderwidth=0)
 TreasureButton.place(x = 100, y =500)
 
-#MovementButtons
+#Movement Buttons
 UpButton = Button(gamepage, text = 'Up', command = Up)
 UpButton.place(x = 700, y = 600)
 
@@ -1172,6 +1232,18 @@ LeftButton.place(x = 700, y = 620)
 
 RightButton = Button(gamepage, text = 'Right', command = Right)
 RightButton.place(x = 730, y = 620)
+
+#Card & Utility Buttons
+
+#Heli and SandBag Button is just for testing
+HeliButton = Button(gamepage, text = 'Heli', command = Heli)
+HeliButton.place(x = 780, y = 640)
+
+SandButton = Button(gamepage, text = 'Sand', command = Sand)
+SandButton.place(x = 810, y = 600)
+
+CardButton = Button(gamepage, text = 'UseCard', command = UseCard)
+CardButton.place(x = 780, y = 620)
 
 GiveButton = Button(gamepage, text = 'Give', command = Give)
 GiveButton.place(x = 780, y = 600)
