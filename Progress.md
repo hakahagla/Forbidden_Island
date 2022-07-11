@@ -1,4 +1,15 @@
-# Step 3. Division of labour
+# Forbidden Island
+# A project
+
+# Rules
+* Everyone codes, no one quits!
+* You must use Python and tkinter
+
+# Roles
+1. Emmanuella - Leader
+2. Brandon & Assa
+
+Division of labour
 * **Emmanuella** - Main Menu
 * **Assa** - New Game Page
 * **Brandon** - Rules Page
