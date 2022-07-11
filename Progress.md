@@ -35,6 +35,10 @@
 * The Characters can now spwan in right locations
 * ---Assa
 
-# 11 July 2022
+# 10 July 2022
 * Now can give players cards
+* ---Assa
+
+# 11 July 2022
+* Now can Heli
 * ---Assa
