@@ -55,6 +55,10 @@ Division of labour
 * ---Assa
 
 # 12 July 2022
-* Now Can SandBag
+* Now can SandBag
 * Removed Array - TileOrder as it is the same as CurrentGameTile
+* ---Assa
+
+# 12 July 2022
+* Now can Capture Treasure
 * ---Assa
