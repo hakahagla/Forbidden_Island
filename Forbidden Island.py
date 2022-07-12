@@ -1,5 +1,5 @@
 #Forbidden Island
-#Last updated: 2022/7/11
+#Last updated: 2022/7/12
 
 '''
 Information
@@ -27,15 +27,11 @@ Navigator: Move another player up to 2 adjacent tiles for 1 action
 '''
 
 #Imports--------------------------------------------------------------------------------------------------------------------
-from calendar import c
-from sqlite3 import Cursor
+
 import tkinter as tk
 from tkinter import *
-from tkinter import ttk
 from tkinter.simpledialog import askstring
 from tkinter.messagebox import askyesno
-from tkinter.messagebox import showwarning
-from xml.etree.ElementTree import C14NWriterTarget
 from PIL import Image,ImageTk
 import random
 
