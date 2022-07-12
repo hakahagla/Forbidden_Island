@@ -2,5 +2,4 @@ WaterTick and DrawTreasure are purely for test right now. They will be called wh
 
 Need to test moving around with players - Do this when doing Move - Empty Tiles #Need Coordinate judgement for every player individually.
 
-Need to amend Heli()
-Need to amend SandBag()
+Check all forloops if they are looping to get mapcards. See SandBag

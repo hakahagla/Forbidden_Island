@@ -1,7 +1,6 @@
-Capture
+Characters Abilities
 Remove Tiles
 Move - Empty Tiles
-Characters Abilities
 Check cycling cards
 Turn
 

@@ -60,10 +60,10 @@ ActionPoint = 3
 
 #Variables------------------------------------------------------------------------------------------------------------------------------------
 
-C1 = [] #Character1 Cards
-C2 = []
-C3 = []
-C4 = []
+C1 = ['Lion','Lion','Lion','Lion'] #Character1 Cards
+C2 = ['Fire','Fire','Fire','Fire']
+C3 = ['Globe','Globe','Globe','Globe']
+C4 = ['Cup','Cup','Cup','Cup','Cup']
 C1Char = ''
 C2Char = ''
 C3Char = ''
@@ -1072,7 +1072,89 @@ def Sand():
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def Capture(): #For taking treasure cards
-    pass
+    global CurrPlayer
+    global AcquiredItems
+    global UnacquiredItems
+    global TreasureDiscard
+    target = 'c' + str(CurrPlayer) + 'label'
+    xvalue = globals()[target].winfo_x()
+    yvalue = globals()[target].winfo_y()
+    flag = False 
+    if CurrPlayer == 1:
+        targetdeck = 'C1'
+        for i in range(1,25):
+            temp = 'mapcard' + str(i)
+            xtemp = globals()[temp].winfo_x()
+            ytemp = globals()[temp].winfo_y()
+            if xtemp == xvalue and ytemp == yvalue:
+                flag = True
+                break
+    elif CurrPlayer == 2:
+        targetdeck = 'C2'
+        for i in range(1,25):
+            temp = 'mapcard' + str(i)
+            xtemp = globals()[temp].winfo_x() + 50
+            ytemp = globals()[temp].winfo_y()
+            if xtemp == xvalue and ytemp == yvalue:
+                flag = True
+                break
+    elif CurrPlayer == 3:
+        targetdeck = 'C3'
+        for i in range(1,25):
+            temp = 'mapcard' + str(i)
+            xtemp = globals()[temp].winfo_x()
+            ytemp = globals()[temp].winfo_y() + 50
+            if xtemp == xvalue and ytemp == yvalue:
+                flag = True
+                break
+    elif CurrPlayer == 4:
+        targetdeck = 'C4'
+        for i in range(1,25):
+            temp = 'mapcard' + str(i)
+            xtemp = globals()[temp].winfo_x() + 50
+            ytemp = globals()[temp].winfo_y() + 50
+            if xtemp == xvalue and ytemp == yvalue:
+                flag = True
+                break
+    if flag == True:
+        name = globals()[temp].cget('text')
+        print(name)
+        if name == 'WhisperingGardens' or name == 'HowlingGardens':
+            x = globals()[targetdeck].count('Lion') #x is the number of amount of cards the players have.
+            if x >= 4:
+                for i in range (0,4):
+                    globals()[targetdeck].remove('Lion')
+                    TreasureDiscard.append('Lion')
+                AcquiredItems.append('TheStatueOfTheWind')
+                UnacquiredItems.remove('TheStatueOfTheWind')
+        elif name == 'TempleOfTheMoon' or name == 'TempleOfTheSun':
+            x = globals()[targetdeck].count('Globe') #x is the number of amount of cards the players have.
+            if x >= 4:
+                for i in range (0,4):
+                    globals()[targetdeck].remove('Globe')
+                    TreasureDiscard.append('Globe')
+                AcquiredItems.append('TheEarthStone')
+                UnacquiredItems.remove('TheEarthStone')
+        elif name == 'TidalPalace' or name == 'CoralPalace':
+            x = globals()[targetdeck].count('Cup') #x is the number of amount of cards the players have.
+            if x >= 4:
+                for i in range (0,4):
+                    globals()[targetdeck].remove('Cup')
+                    TreasureDiscard.append('Cup')
+                AcquiredItems.append('TheOceansChalice')
+                UnacquiredItems.remove('TheOceansChalice')
+        elif name == 'CaveOfEmbers' or name == 'CaveOfShadows':
+            x = globals()[targetdeck].count('Fire') #x is the number of amount of cards the players have.
+            if x >= 4:
+                for i in range (0,4):
+                    globals()[targetdeck].remove('Fire')
+                    TreasureDiscard.append('Fire')
+                AcquiredItems.append('TheCrystalOfFire')
+                UnacquiredItems.remove('TheCrystalOfFire')
+        print(AcquiredItems)
+        print(UnacquiredItems)
+    else:
+        tk.messagebox.showwarning(title = 'Invalid', prompt = 'Not enough cards (need 4)')
 #------------------------------------------------------------------------------------------------------------------------------------
 def UseCard():
     global CurrPlayer
@@ -1290,6 +1372,9 @@ CardButton.place(x = 780, y = 620)
 
 GiveButton = Button(gamepage, text = 'Give', command = Give)
 GiveButton.place(x = 780, y = 600)
+
+CaptureButton = Button(gamepage, text = 'Cap Treasure', command = Capture)
+CaptureButton.place(x = 840 , y = 600)
 
 watertick = Label(gamepage,image=water0)
 watertick.place(x = 900,y=0)
