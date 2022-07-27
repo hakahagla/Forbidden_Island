@@ -851,17 +851,59 @@ def Up():
     target = 'c' + str(CurrPlayer) + 'label'
     xvalue = globals()[target].winfo_x()
     yvalue = globals()[target].winfo_y()
-    if yvalue >= 120 and xvalue >= 400 and xvalue <= 500: #Movement of columns 3 and 4  
-        globals()[target].place(x = xvalue, y = yvalue - 100)
-        ActionPoint -= 1
-    elif yvalue >= 220 and xvalue >= 300 and xvalue <= 600: #Movement of columns 2 and 5
-        globals()[target].place(x = xvalue, y = yvalue - 100)
-        ActionPoint -= 1
-    elif yvalue >= 320 and xvalue >= 200 and xvalue <= 700: #Movement of columns 1 and 6
-        globals()[target].place(x = xvalue, y = yvalue - 100)
-        ActionPoint -= 1
-    else:
-        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+    if target == 'c1label': 
+        if yvalue >= 120 and xvalue >= 400 and xvalue <= 500: #Movement of columns 3 and 4  
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        elif yvalue >= 220 and xvalue >= 300 and xvalue <= 600: #Movement of columns 2 and 5
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        elif yvalue >= 320 and xvalue >= 200 and xvalue <= 700: #Movement of columns 1 and 6
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        else:
+            tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+    elif target == 'c2label':
+        tempx = xvalue -50
+        if yvalue >= 120 and tempx >= 400 and tempx <= 500: #Movement of columns 3 and 4  
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        elif yvalue >= 220 and tempx >= 300 and tempx <= 600: #Movement of columns 2 and 5
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        elif yvalue >= 320 and tempx >= 200 and tempx <= 700: #Movement of columns 1 and 6
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        else:
+            tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+    elif target == 'c3label':
+        tempy = xvalue -50
+        if tempy >= 120 and xvalue >= 400 and xvalue <= 500: #Movement of columns 3 and 4  
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        elif tempy >= 220 and xvalue >= 300 and xvalue <= 600: #Movement of columns 2 and 5
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        elif tempy >= 320 and xvalue >= 200 and xvalue <= 700: #Movement of columns 1 and 6
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        else:
+            tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+    elif target == 'c4label':
+        tempx = xvalue -50
+        tempy = yvalue -50
+        tempy = xvalue -50
+        if tempy >= 120 and tempx >= 400 and tempx <= 500: #Movement of columns 3 and 4  
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        elif tempy >= 220 and tempx >= 300 and tempx <= 600: #Movement of columns 2 and 5
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        elif tempy >= 320 and tempx >= 200 and tempx <= 700: #Movement of columns 1 and 6
+            globals()[target].place(x = xvalue, y = yvalue - 100)
+            ActionPoint -= 1
+        else:
+            tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
 def Down():
     global CurrPlayer
     global ActionPoint
@@ -872,17 +914,58 @@ def Down():
     target = 'c' + str(CurrPlayer) + 'label'
     xvalue = globals()[target].winfo_x()
     yvalue = globals()[target].winfo_y()  
-    if yvalue <= 420 and xvalue >= 400 and xvalue <= 500:
-        globals()[target].place(x = xvalue, y = yvalue + 100)
-        ActionPoint -= 1
-    elif yvalue <= 320 and xvalue >= 300 and xvalue <= 600:
-        globals()[target].place(x = xvalue, y = yvalue + 100)
-        ActionPoint -= 1
-    elif yvalue <= 220 and xvalue >= 200 and xvalue <= 700:
-        globals()[target].place(x = xvalue, y = yvalue + 100)
-        ActionPoint -= 1
-    else:
-        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+    if target == 'c1label':
+        if yvalue <= 420 and xvalue >= 400 and xvalue <= 500:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        elif yvalue <= 320 and xvalue >= 300 and xvalue <= 600:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        elif yvalue <= 220 and xvalue >= 200 and xvalue <= 700:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        else:
+            tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+    elif target == 'c2label':
+        tempx = xvalue -50
+        if yvalue <= 420 and tempx >= 400 and tempx <= 500:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        elif yvalue <= 320 and tempx >= 300 and tempx <= 600:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        elif yvalue <= 220 and tempx >= 200 and tempx <= 700:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        else:
+            tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+    elif target == 'c3label':
+        tempy = yvalue -50
+        if tempy <= 420 and xvalue >= 400 and xvalue <= 500:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        elif tempy <= 320 and xvalue >= 300 and xvalue <= 600:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        elif tempy <= 220 and xvalue >= 200 and xvalue <= 700:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        else:
+            tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+    elif target == 'c4label':
+        tempx = xvalue -50
+        tempy = yvalue -50
+        if tempy <= 420 and tempx >= 400 and tempx <= 500:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        elif tempy <= 320 and tempx >= 300 and tempx <= 600:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        elif tempy <= 220 and tempx >= 200 and tempx <= 700:
+            globals()[target].place(x = xvalue, y = yvalue + 100)
+            ActionPoint -= 1
+        else:
+            tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
 def Left():
     global CurrPlayer
     global ActionPoint
@@ -893,17 +976,58 @@ def Left():
     target = 'c' + str(CurrPlayer) + 'label'
     xvalue = globals()[target].winfo_x()
     yvalue = globals()[target].winfo_y()
-    if xvalue >= 300 and yvalue >= 220 and yvalue <= 320:
-        globals()[target].place(x = xvalue - 100, y = yvalue)
-        ActionPoint -= 1
-    elif xvalue >= 400 and yvalue >= 120 and yvalue <= 420:
-        globals()[target].place(x = xvalue - 100, y = yvalue)
-        ActionPoint -= 1
-    elif xvalue >= 500 and yvalue >= 20 and yvalue <= 520:
-        globals()[target].place(x = xvalue - 100, y = yvalue)
-        ActionPoint -= 1
-    else:
-           tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+    if target == 'c1label':
+        if xvalue >= 300 and yvalue >= 220 and yvalue <= 320:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        elif xvalue >= 400 and yvalue >= 120 and yvalue <= 420:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        elif xvalue >= 500 and yvalue >= 20 and yvalue <= 520:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        else:
+               tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+    elif target == 'c2label':
+        tempx = xvalue -50
+        if tempx >= 300 and yvalue >= 220 and yvalue <= 320:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        elif tempx >= 400 and yvalue >= 120 and yvalue <= 420:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        elif tempx >= 500 and yvalue >= 20 and yvalue <= 520:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        else:
+               tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+    elif target == 'c3label':
+        tempy = yvalue -50
+        if xvalue >= 300 and tempy >= 220 and tempy <= 320:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        elif xvalue >= 400 and tempy >= 120 and tempy <= 420:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        elif xvalue >= 500 and tempy >= 20 and tempy <= 520:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        else:
+               tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+    elif target == 'c4label':
+        tempx = xvalue-50
+        tempy = yvalue-50
+        if tempx >= 300 and tempy >= 220 and tempy <= 320:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        elif tempx >= 400 and tempy >= 120 and tempy <= 420:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        elif tempx >= 500 and tempy >= 20 and tempy <= 520:
+            globals()[target].place(x = xvalue - 100, y = yvalue)
+            ActionPoint -= 1
+        else:
+               tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
 def Right():
     global CurrPlayer
     global ActionPoint
@@ -914,17 +1038,58 @@ def Right():
     target = 'c' + str(CurrPlayer) + 'label'
     xvalue = globals()[target].winfo_x()
     yvalue = globals()[target].winfo_y()
-    if xvalue <= 600 and yvalue >= 220 and yvalue <= 320:
-        globals()[target].place(x = xvalue + 100, y = yvalue)
-        ActionPoint -= 1
-    elif xvalue <= 500 and yvalue >= 120 and yvalue <= 420:
-        globals()[target].place(x = xvalue + 100, y = yvalue)
-        ActionPoint -= 1
-    elif xvalue <= 400 and yvalue >= 20 and yvalue <= 520:
-        globals()[target].place(x = xvalue + 100, y = yvalue)
-        ActionPoint -= 1
-    else:
-           tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+    if target == 'c1label':
+        if xvalue <= 600 and yvalue >= 220 and yvalue <= 320:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        elif xvalue <= 500 and yvalue >= 120 and yvalue <= 420:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        elif xvalue <= 400 and yvalue >= 20 and yvalue <= 520:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        else:
+               tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+    elif target == 'c2label':
+        tempx = xvalue -50
+        if tempx <= 600 and yvalue >= 220 and yvalue <= 320:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        elif tempx <= 500 and yvalue >= 120 and yvalue <= 420:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        elif tempx <= 400 and yvalue >= 20 and yvalue <= 520:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        else:
+               tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+    elif target == 'c3label':
+        tempy = yvalue -50
+        if xvalue <= 600 and tempy >= 220 and tempy <= 320:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        elif xvalue <= 500 and tempy >= 120 and tempy <= 420:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        elif xvalue <= 400 and tempy >= 20 and tempy <= 520:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        else:
+               tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+    elif target == 'c4label':
+        tempx = xvalue-50
+        tempy = yvalue -50
+        if tempx <= 600 and tempy >= 220 and tempy <= 320:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        elif tempx <= 500 and tempy >= 120 and tempy <= 420:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        elif tempx <= 400 and tempy >= 20 and tempy <= 520:
+            globals()[target].place(x = xvalue + 100, y = yvalue)
+            ActionPoint -= 1
+        else:
+               tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def Give():
