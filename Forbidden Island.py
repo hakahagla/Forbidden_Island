@@ -56,10 +56,10 @@ ActionPoint = 3
 
 #Variables------------------------------------------------------------------------------------------------------------------------------------
 
-C1 = ['Lion','Lion','Lion','Lion'] #Character1 Cards
-C2 = ['Fire','Fire','Fire','Fire']
-C3 = ['Globe','Globe','Globe','Globe']
-C4 = ['Cup','Cup','Cup','Cup','Cup']
+C1 = [] #Character1 Cards
+C2 = []
+C3 = []
+C4 = []
 C1Char = ''
 C2Char = ''
 C3Char = ''
@@ -71,7 +71,7 @@ AcquiredItems = []
 CurrentGameTile = []#Stores the cards in order 1 to 25
 CurrentCharacter = []
 CurrPlayer = 1
-CurrentFlood = TileNames[:] #Current Flood Cards to draw from
+FloodPile = TileNames[:] #Current Flood Cards to draw from
 FloodDiscard = [] #Ingame Discard Pile
 HalfFlooded = [] #Currently HalfFlooded
 #28 Treasure Cards in Total: 5 Fire ,5 Lion ,5Globe ,5 Cup,2 SandBag, 3 HelicopterLift, 3 WatersRise
@@ -99,6 +99,11 @@ pic7 = PhotoImage(file = "./images/rules/page7new.png")
 pic8 = PhotoImage(file = "./images/rules/page8.png")
 pic = Label(rulewindow,image=pic1)
 pic.pack()
+
+#FloodedPic
+FloodedPic = Image.open("./images/tiles/flooded.png" )
+FloodedPic = FloodedPic.resize((100,100))
+FloodedPic = ImageTk.PhotoImage(FloodedPic)
 
 #TilePicture
 #No Flood
@@ -333,14 +338,15 @@ water9 = ImageTk.PhotoImage(water9)
 
 #Subprograms------------------------------------------------------------------------------------------------------------------------------------
 def ini(): #Initialise the arrays and variables
-    global CurrentFlood
+    global FloodPile
     global FloodDiscard
     #Getting the starting flood tiles
     for i in range (0,6):
-        temp=random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[temp])
-        HalfFlooded.append(CurrentFlood[temp])
-        CurrentFlood.remove(CurrentFlood[temp])
+        temp=random.randint(0, len(FloodPile)-1)
+        FloodDiscard.append(FloodPile[temp])
+        HalfFlooded.append(FloodPile[temp])
+        FloodPile.remove(FloodPile[temp])
+    print(HalfFlooded)
 ini()
     #Set water mark
     #Called every game start to initialise the array containing cards of the game
@@ -354,178 +360,230 @@ def DrawTreasure():
     global WaterTick
     global CurrPlayer
     global ActionPoint
-    global CurrentFlood
-    firstCard = random.randint(0, len(TreasureCards)-1)
-    secondCard = random.randint(0, len(TreasureCards)-1)
-    if TreasureCards[firstCard] == "WatersRise":
-        random.shuffle(FloodDiscard)
-        CurrentFlood = FloodDiscard[:]
-        WaterTick+=1
-        FloodDiscard = []
-        SetWaterMark()
-        ChangeWaterMark()
-        changeFloodCardNum()
-    if TreasureCards[secondCard] == "WatersRise":
-        random.shuffle(FloodDiscard)
-        CurrentFlood = FloodDiscard[:]
-        FloodDiscard = []
-        WaterTick+=1
-        SetWaterMark()
-        ChangeWaterMark()
-        changeFloodCardNum()
-#Append Card
-    if CurrPlayer == 4:
-        if TreasureCards[firstCard] != 'WatersRise':
-            C4.append(TreasureCards[firstCard])
-            DiscardSelect()
-        if TreasureCards[secondCard] != 'WatersRise':
-            C4.append(TreasureCards[secondCard])
-            DiscardSelect()
-        CurrPlayer = 1
-        ActionPoint = 3
-    elif CurrPlayer == 3:
-        if TreasureCards[firstCard] != 'WatersRise':
-            C3.append(TreasureCards[firstCard])
-            DiscardSelect()
-        if TreasureCards[secondCard] != 'WatersRise':
-            C3.append(TreasureCards[secondCard])
-            DiscardSelect()
-        if NumPlayers == 3:
+    global FloodPile
+    global TreasureDiscard
+    global TreasureCards
+    if len(TreasureCards) > 0:
+        firstCard = random.randint(0, len(TreasureCards)-1) #Realistically we should be picking the first card on top of the deck
+        secondCard = random.randint(0, len(TreasureCards)-1) #But to add more fun and randomness, I am picking a random one
+        if TreasureCards[firstCard] == "WatersRise":
+            random.shuffle(FloodDiscard)
+            FloodPile = FloodDiscard + FloodPile
+            FloodDiscard = []
+            ChangeWaterMark()
+            SetWaterMark()
+            changeFloodCardNum()
+        if TreasureCards[secondCard] == "WatersRise":
+            random.shuffle(FloodDiscard)
+            FloodPile = FloodDiscard + FloodPile
+            FloodDiscard = []
+            ChangeWaterMark()
+            SetWaterMark()
+            changeFloodCardNum()
+    #Append Card
+        if CurrPlayer == 4:
+            if TreasureCards[firstCard] != 'WatersRise':
+                C4.append(TreasureCards[firstCard])
+                DiscardSelect()
+            if TreasureCards[secondCard] != 'WatersRise':
+                C4.append(TreasureCards[secondCard])
+                DiscardSelect()
             CurrPlayer = 1
-        else:
-            CurrPlayer +=1
-        ActionPoint = 3
-    elif CurrPlayer == 2:
-        if TreasureCards[firstCard] != 'WatersRise':
-            C2.append(TreasureCards[firstCard])
-            DiscardSelect()
-        if TreasureCards[secondCard] != 'WatersRise':
-            C2.append(TreasureCards[secondCard])
-            DiscardSelect()
-        if NumPlayers == 2:
-            CurrPlayer = 1
-        else:
+            ActionPoint = 3
+        elif CurrPlayer == 3:
+            if TreasureCards[firstCard] != 'WatersRise':
+                C3.append(TreasureCards[firstCard])
+                DiscardSelect()
+            if TreasureCards[secondCard] != 'WatersRise':
+                C3.append(TreasureCards[secondCard])
+                DiscardSelect()
+            if NumPlayers == 3:
+                CurrPlayer = 1
+            else:
+                CurrPlayer +=1
+            ActionPoint = 3
+        elif CurrPlayer == 2:
+            if TreasureCards[firstCard] != 'WatersRise':
+                C2.append(TreasureCards[firstCard])
+                DiscardSelect()
+            if TreasureCards[secondCard] != 'WatersRise':
+                C2.append(TreasureCards[secondCard])
+                DiscardSelect()
+            if NumPlayers == 2:
+                CurrPlayer = 1
+            else:
+                CurrPlayer += 1
+            ActionPoint = 3
+        elif CurrPlayer == 1:
+            if TreasureCards[firstCard] != 'WatersRise':
+                C1.append(TreasureCards[firstCard])
+                DiscardSelect()
+            if TreasureCards[secondCard] != 'WatersRise':
+                C1.append(TreasureCards[secondCard])
+                DiscardSelect()
             CurrPlayer += 1
-        ActionPoint = 3
-    elif CurrPlayer == 1:
-        if TreasureCards[firstCard] != 'WatersRise':
-            C1.append(TreasureCards[firstCard])
-            DiscardSelect()
-        if TreasureCards[secondCard] != 'WatersRise':
-            C1.append(TreasureCards[secondCard])
-            DiscardSelect()
-        CurrPlayer += 1
-        ActionPoint = 3
-    print("Character 1 Cards: ",C1)
-    print()
-    print("Character 2 Cards: ",C2)
-    print()
-    print("Character 3 Cards: ",C3)
-    print()
-    print("Character 4 Cards: ",C4) 
-    print('--------------------------------------')
+            ActionPoint = 3
+        print(FloodPile)
+        print(FloodDiscard)
+    else:
+        random.shuffle(TreasureDiscard)
+        TreasureCards = TreasureCards + TreasureDiscard
+        TreasureDiscard = []
+        DrawTreasure()
 #------------------------------------------------------------------------------------------------------------------------------------
 def FloodDeckDraw():
     #FloodCard Num
     global WaterTick
-    SetWaterMark()
+    global FloodDiscard
+    global HalfFlooded
+    global FloodPile#Enters remove cards  #Enters Half_Flood Procedure
     if WaterTick <= 2:
-        firstCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[firstCard])
-        HalfFlooded.append(CurrentFlood[firstCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[firstCard])
-        
-        secondCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[secondCard])
-        HalfFlooded.append(CurrentFlood[secondCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[secondCard])
-        
-        print("FLOOD DISCARD: " + str(FloodDiscard))
+        firstCardNum = random.randint(0, len(FloodPile)-1)
+        firstCard = FloodPile[firstCardNum]
+        if firstCard in HalfFlooded and firstCard in FloodPile: 
+            removeTile(firstCard)
+        else:
+            FloodDiscard.append(firstCard)
+            HalfFlooded.append(firstCard)
+            changeFloodTile()
+            FloodPile.remove(firstCard)
+  
+        secondCardNum = random.randint(0, len(FloodPile)-1)
+        secondCard = FloodPile[secondCardNum]
+        if secondCard in HalfFlooded and secondCard in FloodPile:
+            removeTile(secondCard)
+        else:
+            FloodDiscard.append(secondCard)
+            HalfFlooded.append(secondCard)
+            changeFloodTile()
+            FloodPile.remove(secondCard)
 
     elif WaterTick > 2 and WaterTick <= 5:
-        firstCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[firstCard])
-        HalfFlooded.append(CurrentFlood[firstCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[firstCard])
+        firstCardNum = random.randint(0, len(FloodPile)-1)
+        firstCard = FloodPile[firstCardNum]
+        if firstCard in HalfFlooded and firstCard in FloodPile: 
+            removeTile(firstCard)
+        else:
+            FloodDiscard.append(firstCard)
+            HalfFlooded.append(firstCard)
+            changeFloodTile()
+            FloodPile.remove(firstCard)
+  
+        secondCardNum = random.randint(0, len(FloodPile)-1)
+        secondCard = FloodPile[secondCardNum]
+        if secondCard in HalfFlooded and secondCard in FloodPile:
+            removeTile(secondCard)
+        else:
+            FloodDiscard.append(secondCard)
+            HalfFlooded.append(secondCard)
+            changeFloodTile()
+            FloodPile.remove(secondCard)
         
-        secondCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[secondCard])
-        HalfFlooded.append(CurrentFlood[secondCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[secondCard])
-        
-        thirdCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[thirdCard])
-        HalfFlooded.append(CurrentFlood[thirdCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[thirdCard])
-        
-        print("FLOOD DISCARD: " + str(FloodDiscard))
+        thirdCardNum = random.randint(0, len(FloodPile)-1)
+        thirdCard = FloodPile[thirdCardNum]
+        if thirdCard in HalfFlooded and thirdCard in FloodPile:
+            removeTile(thirdCard)
+        else:
+            FloodDiscard.append(thirdCard)
+            HalfFlooded.append(thirdCard)
+            changeFloodTile()
+            FloodPile.remove(thirdCard)
 
     elif WaterTick > 5 and WaterTick <= 7:
-        firstCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[firstCard])
-        HalfFlooded.append(CurrentFlood[firstCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[firstCard])
+        firstCardNum = random.randint(0, len(FloodPile)-1)
+        firstCard = FloodPile[firstCardNum]
+        if firstCard in HalfFlooded and firstCard in FloodPile: 
+            removeTile(firstCard)
+        else:
+            FloodDiscard.append(firstCard)
+            HalfFlooded.append(firstCard)
+            changeFloodTile()
+            FloodPile.remove(firstCard)
         
-        secondCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[secondCard])
-        HalfFlooded.append(CurrentFlood[secondCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[secondCard])
+        secondCardNum = random.randint(0, len(FloodPile)-1)
+        secondCard = FloodPile[secondCardNum]
+        if secondCard in HalfFlooded and secondCard in FloodPile:
+            removeTile(secondCard)
+        else:
+            FloodDiscard.append(secondCard)
+            HalfFlooded.append(secondCard)
+            changeFloodTile()
+            FloodPile.remove(secondCard)
         
-        thirdCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[thirdCard])
-        HalfFlooded.append(CurrentFlood[thirdCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[thirdCard])
+        thirdCardNum = random.randint(0, len(FloodPile)-1)
+        thirdCard = FloodPile[thirdCardNum]
+        if thirdCard in HalfFlooded and thirdCard in FloodPile:
+            removeTile(thirdCard)
+        else:
+            FloodDiscard.append(thirdCard)
+            HalfFlooded.append(thirdCard)
+            changeFloodTile()
+            FloodPile.remove(thirdCard)
 
-        fourthCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[fourthCard])
-        HalfFlooded.append(CurrentFlood[fourthCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[fourthCard])
-
-        print("FLOOD DISCARD: " + str(FloodDiscard))
+        fourthCardNum = random.randint(0, len(FloodPile)-1)
+        fourthCard = FloodPile[fourthCardNum]
+        if fourthCard in HalfFlooded and fourthCard in FloodPile:
+            removeTile(fourthCard)
+        else:
+            FloodDiscard.append(fourthCard)
+            HalfFlooded.append(fourthCard)
+            changeFloodTile()
+            FloodPile.remove(fourthCard)
 
     elif WaterTick > 7  and WaterTick <=9:
-        firstCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[firstCard])
-        HalfFlooded.append(CurrentFlood[firstCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[firstCard])
+        firstCardNum = random.randint(0, len(FloodPile)-1)
+        firstCard = FloodPile[firstCardNum]
+        if firstCard in HalfFlooded and firstCard in FloodPile: 
+            removeTile(firstCard)
+        else:
+            FloodDiscard.append(firstCard)
+            HalfFlooded.append(firstCard)
+            changeFloodTile()
+            FloodPile.remove(firstCard)
 
-        secondCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[secondCard])
-        HalfFlooded.append(CurrentFlood[secondCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[secondCard])
+        secondCardNum = random.randint(0, len(FloodPile)-1)
+        secondCard = FloodPile[secondCardNum]
+        if secondCard in HalfFlooded and secondCard in FloodPile:
+            removeTile(secondCard)
+        else:
+            FloodDiscard.append(secondCard)
+            HalfFlooded.append(secondCard)
+            changeFloodTile()
+            FloodPile.remove(secondCard)
         
-        thirdCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[thirdCard])
-        HalfFlooded.append(CurrentFlood[thirdCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[thirdCard])
+        thirdCardNum = random.randint(0, len(FloodPile)-1)
+        thirdCard = FloodPile[thirdCardNum]
+        if thirdCard in HalfFlooded and thirdCard in FloodPile:
+            removeTile(thirdCard)
+        else:
+            FloodDiscard.append(thirdCard)
+            HalfFlooded.append(thirdCard)
+            changeFloodTile()
+            FloodPile.remove(thirdCard)
 
-        fourthCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[fourthCard])
-        HalfFlooded.append(CurrentFlood[fourthCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[fourthCard])
+        fourthCardNum = random.randint(0, len(FloodPile)-1)
+        fourthCard = FloodPile[fourthCardNum]
+        if fourthCard in HalfFlooded and fourthCard in FloodPile:
+            removeTile(fourthCard)
+        else:
+            FloodDiscard.append(fourthCard)
+            HalfFlooded.append(fourthCard)
+            changeFloodTile()
+            FloodPile.remove(fourthCard)
         
-        fifthCard = random.randint(0, len(CurrentFlood)-1)
-        FloodDiscard.append(CurrentFlood[fifthCard])
-        HalfFlooded.append(CurrentFlood[fifthCard])
-        changeFloodTile()
-        CurrentFlood.remove(CurrentFlood[fifthCard])
+        fifthCardNum = random.randint(0, len(FloodPile)-1)
+        fifthCard = FloodPile[fifthCardNum]
+        if fifthCard in HalfFlooded and fifthCard in FloodPile:
+            removeTile(fifthCard)
+        else:
+            FloodDiscard.append(fifthCard)
+            HalfFlooded.append(fifthCard)
+            changeFloodTile()
+            FloodPile.remove(fifthCard)
            
         print("FLOOD DISCARD: " + str(FloodDiscard))
 
-        print("CURRENT FLOOD: " + str(CurrentFlood))  
+        print("CURRENT FLOOD: " + str(FloodPile))  
 #------------------------------------------------------------------------------------------------------------------------------------
 def changeFloodCardNum():
     global FloodCardNum
@@ -539,11 +597,26 @@ def changeFloodCardNum():
         tk.messagebox.showerror("GG","Game over :(")
      #Game over
 #------------------------------------------------------------------------------------------------------------------------------------
+def removeTile(card):
+    global FloodPile
+    global HalfFlooded
+    global CurrentGameTile
+    print('HalfFlooded' + str(HalfFlooded))
+    for i in range (0,24):
+        target = 'mapcard' + str(i+1)
+        if globals()[target].cget('text') == str(card):
+            globals()[target].configure(image = FloodedPic)
+            HalfFlooded.remove(card)
+            FloodPile.remove(card)
+            print('Gone Tile '+ CurrentGameTile[i])
+            CurrentGameTile[i] = 'Flooded'
+#------------------------------------------------------------------------------------------------------------------------------------
 def changeFloodTile():
     global FloodDiscard
     global CurrentGameTile
-    for x in range(1,24):
-        for y in range(0,len(FloodDiscard)):
+    global HalfFlooded
+    for x in range(0,24): #Check Every Mapcard
+        for y in range(0,len(HalfFlooded)): #Check Every HalfFlooded Card
             if HalfFlooded[y] == CurrentGameTile[x]:
                 target = 'mapcard' + str(x+1)
                 if CurrentGameTile[x] == 'WhisperingGardens':
@@ -623,19 +696,19 @@ def SetWaterMark():
 #------------------------------------------------------------------------------------------------------------------------------------
 def DiscardSelect():
     global CurrPlayer
-    while len(C1) > 5:
+    while len(C1) > 999:
         unwanted = askstring(title="Discard",prompt='Player 1:' +str(C1))
         C1.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while len(C1) > 5:
+    while len(C1) > 999:
         unwanted = askstring(title="Discard",prompt='Player 2:' +str(C2))
         C2.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while len(C3) > 5:
+    while len(C3) > 999:
         unwanted = askstring(title="Discard",prompt='Player 3:' +str(C3))
         C3.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while len(C4) > 5:
+    while len(C4) > 999:
         unwanted = askstring(title="Discard",prompt='Player 4:' +str(C4))
         C4.remove(unwanted)
         TreasureDiscard.append(unwanted)
@@ -1367,8 +1440,6 @@ def UseCard():
                 TreasureDiscard.append(targetcard)
         if targetcard != '':
             break
-
-
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def getinput():

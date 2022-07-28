@@ -1,6 +1,6 @@
-Characters Abilities
-Remove Tiles
 Move - Empty Tiles
+Tile Becoming Flooded
+Characters Abilities
 Check cycling cards
 Turn
 
