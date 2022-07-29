@@ -59,6 +59,6 @@ Division of labour
 * ---Assa
 
 #29 July 2022
-#Now have flooded tiles
-#Amended Movement so players cannot move on to fully flooded tiles
-# ---Assa
+* Now have flooded tiles
+* Amended Movement so players cannot move on to fully flooded tiles
+* ---Assa
