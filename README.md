@@ -1,9 +1,4 @@
 # Forbidden Island
-# A project
-
-# Rules
-* Everyone codes, no one quits!
-* You must use Python and tkinter
 
 # Roles
 1. Emmanuella - Leader
