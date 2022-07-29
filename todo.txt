@@ -1,8 +1,6 @@
-Move - Empty Tiles
-Tile Becoming Flooded
+Turn & Win + Lose Triggers
+
 Characters Abilities
-Check cycling cards
-Turn
 
 fix issues listed in problems.txt
 
