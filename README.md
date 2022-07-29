@@ -62,3 +62,8 @@ Division of labour
 # 12 July 2022
 * Now can Capture Treasure
 * ---Assa
+
+#29 July 2022
+#Now have flooded tiles
+#Amended Movement so players cannot move on to fully flooded tiles
+# ---Assa
