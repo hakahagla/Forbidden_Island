@@ -1,19 +1,9 @@
 # Forbidden Island
 
-# Roles
-1. Emmanuella - Leader
-2. Brandon & Assa
-
-Division of labour
-* **Emmanuella** - Main Menu
-* **Assa** - New Game Page
-* **Brandon** - Rules Page
-
 # 27th Apr 2022
 * Start created the various pages in tKinter
 * Camel case for variables, constants are in lowercase, classes is snake case
 * Absolute vs relative paths.. relative paths. 💡
-
 
 # 3rd May 2022
 * Assa is still trying to complete the main menu
@@ -35,7 +25,6 @@ Division of labour
 # 4 July 2022
 * The charatcters can now move about
 * ---Assa
-
 
 # 24 June 2022
 * The Characters can now spwan in right locations
@@ -61,4 +50,10 @@ Division of labour
 # 29 July 2022
 * Now have flooded tiles
 * Amended Movement so players cannot move on to fully flooded tiles
+* ---Assa
+
+# 30 July 2022
+* Turn functions properlly
+* New labels added to gamepage
+* Win and loss added
 * ---Assa
