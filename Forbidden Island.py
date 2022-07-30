@@ -26,7 +26,6 @@ Navigator: Move another player up to 2 adjacent tiles for 1 action
 
 #Imports--------------------------------------------------------------------------------------------------------------------
 
-from inspect import currentframe
 import tkinter as tk
 from tkinter import *
 from tkinter.simpledialog import askstring
