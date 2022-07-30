@@ -1,5 +1,5 @@
 #Forbidden Island
-#Last updated: 2022/7/29
+#Last updated: 2022/7/30
 
 '''
 Information
