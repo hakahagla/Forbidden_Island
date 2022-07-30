@@ -1,6 +1,2 @@
-Turn & Win + Lose Triggers
-
 Characters Abilities
-
-fix issues listed in problems.txt
 
