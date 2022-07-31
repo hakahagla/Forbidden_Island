@@ -57,3 +57,8 @@
 * New labels added to gamepage
 * Win and loss added
 * ---Assa
+
+# 31 July 2022
+* 4/6 character ability finished
+* Sorted problems listed
+* ---Assa
