@@ -1,5 +1,5 @@
 #Forbidden Island
-#Last updated: 2022/7/30
+#Last updated: 2022/7/31
 
 '''
 Information
@@ -26,10 +26,12 @@ Navigator: Move another player up to 2 adjacent tiles for 1 action
 
 #Imports--------------------------------------------------------------------------------------------------------------------
 
+from itertools import filterfalse
 import tkinter as tk
 from tkinter import *
 from tkinter.simpledialog import askstring
 from tkinter.messagebox import askyesno
+from turtle import update
 from PIL import Image,ImageTk
 import random
 
@@ -76,6 +78,7 @@ HalfFlooded = [] #Currently HalfFlooded
 #28 Treasure Cards in Total: 5 Fire ,5 Lion ,5Globe ,5 Cup,2 SandBag, 3 HelicopterLift, 3 WatersRise
 TreasureDiscard = []
 WaterTick = 0
+heliflag = True
 FloodCardNum = 2 #Number of flood card to be drawn
 
 #Image Import------------------------------------------------------------------------------------------------------------------------------------
@@ -353,6 +356,104 @@ ini()
     #Use random to randomise order so later the board can be set up following the order of the list
     #Set flood card num according to difficulty
     #Set 6 tiles to half flooded
+
+#------------------------------------------------------------------------------------------------------------------------------------
+def PilotHeli():
+    global CurrPlayer
+    global CurrentGameTile
+    global AcquiredItems
+    global heliflag
+    if globals()['C' + str(CurrPlayer) + 'Char'] ==  'Pilot':
+        if heliflag:
+            while True:
+                target_p = askstring(title = 'Enter Number',prompt='Choose a player') # target player and target destination
+                target_p = 'c' + target_p + 'label'
+                target_d = askstring(title = '',prompt='Choose destination')
+                if target_d in CurrentGameTile:
+                    break
+            for i in range (1,25):
+                tiletarget = 'mapcard' + str(i)
+                if globals()[tiletarget].cget('text').lower() == target_d.lower():
+                    xvalue = globals()[tiletarget].winfo_x()
+                    yvalue = globals()[tiletarget].winfo_y()
+            if target_p == 'c1label':
+                globals()[target_p].place(x = xvalue, y = yvalue)
+            elif target_p == 'c2label':
+                globals()[target_p].place(x = xvalue + 50, y = yvalue)
+            elif target_p == 'c3label':
+                globals()[target_p].place(x = xvalue, y = yvalue + 50)
+            elif target_p == 'c4label':
+                globals()[target_p].place(x = xvalue + 50, y = yvalue + 50)
+            updateAction()
+            heliflag = False
+
+#------------------------------------------------------------------------------------------------------------------------------------
+def MessengerGive():
+    #One card per action point
+    global C1
+    global C2
+    global C3
+    global C4
+    global ActionPoint
+    global CurrPlayer
+    global NumPlayers
+    if globals()['C' + str(CurrPlayer) + 'Char'] == 'Messenger:':
+        if ActionPoint != 0:
+            tplayer = askstring (title='Do no press cancel', prompt='Select a player(EnterNumber)')#tplayer is the target player
+            targetdeck = 'C' + tplayer
+            while True:
+                if tplayer == '1':
+                    targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                    if targetcard != '':
+                        globals()[targetdeck].remove(targetcard)
+                        C1.append(targetcard)
+                        DiscardSelect()
+                    break
+                elif tplayer == '2':
+                    targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                    if targetcard != '':
+                        globals()[targetdeck].remove(targetcard)
+                        C2.append(targetcard)
+                        DiscardSelect()
+                    break
+                elif tplayer == '3':
+                    targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                    if targetcard != '':
+                        globals()[targetdeck].remove(targetcard)
+                        C3.append(targetcard)
+                        DiscardSelect()
+                    break
+                elif tplayer == '4':
+                    targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                    if targetcard != '':
+                        globals()[targetdeck].remove(targetcard)
+                        C4.append(targetcard)
+                        DiscardSelect()
+                    break
+                else:
+                    tplayer = askstring (title='Give', prompt='Select a player(EnterNumber)')
+            updateAction()
+
+#------------------------------------------------------------------------------------------------------------------------------------
+def NavigatorMove():
+    global CurrPlayer
+    if globals()['C' + str(CurrPlayer) + 'Char'] ==  'Navigator':
+        temp = ''
+        for i in range(0,2):
+            while temp.lower() != 'up' or temp.lower() != 'down' or temp.lower() != 'left' or temp.lower() != 'right':
+                temp = askstring(title = '', prompt = 'Do you want to move Up, Down, Left or Right?')
+                if temp.lower() == 'up':
+                    Up()
+                    break
+                elif temp.lower() == 'down':
+                    Down()
+                    break
+                elif temp.lower() == 'left':
+                    Left()
+                    break
+                elif temp.lwoer == 'right':
+                    Right()
+                    break
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def checkLoss(): 
@@ -999,6 +1100,7 @@ def SpawnPlayers():
     #Top Right of tile is always C2
     #Bottom Left of tile is always C3
     #Bottom Right of tile is always C4
+    #Pilot Blue, Diver Black, Engineer Red, Explorer Green, Messenger White, Navigator Yellow
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def checkFlood(xcard,ycard):
@@ -1022,8 +1124,16 @@ def Up():
     global c2label
     global c3label
     global c4label
+    global naviflag
+    target = str(CurrPlayer)
     if ActionPoint != 0:
-        target = 'c' + str(CurrPlayer) + 'label'
+        user = 'C' + str(CurrPlayer) + 'Char'
+        if globals()[user] != 'Navigator':
+            target = 'c' + str(CurrPlayer) + 'label'
+        elif globals()[user] == 'Navigator': # If navigator uses move and it is not used on navigator
+            while target == str(CurrPlayer):
+                target = askstring(title = 'Enter a Number',prompt = 'Which Player do you want to move (Cannot be yourself)')
+            target = 'c' + target +'label'
         xvalue = globals()[target].winfo_x()
         yvalue = globals()[target].winfo_y()
         if target == 'c1label': 
@@ -1121,8 +1231,16 @@ def Down():
     global c2label
     global c3label
     global c4label
+    global naviflag
+    target = str(CurrPlayer)
     if ActionPoint != 0:
-        target = 'c' + str(CurrPlayer) + 'label'
+        user = 'C' + str(CurrPlayer) + 'Char'
+        if globals()[user] != 'Navigator':
+            target = 'c' + str(CurrPlayer) + 'label'
+        elif globals()[user] == 'Navigator': # If navigator uses move and it is not used on navigator
+            while target == str(CurrPlayer):
+                target = askstring(title = 'Enter a Number',prompt = 'Enter the user (Enter a number)')
+            target = 'c' + target +'label'
         xvalue = globals()[target].winfo_x()
         yvalue = globals()[target].winfo_y()  
         if target == 'c1label':
@@ -1220,8 +1338,16 @@ def Left():
     global c2label
     global c3label
     global c4label
+    global naviflag
+    target = str(CurrPlayer)
     if ActionPoint != 0:
-        target = 'c' + str(CurrPlayer) + 'label'
+        user = 'C' + str(CurrPlayer) + 'Char'
+        if globals()[user] != 'Navigator':
+            target = 'c' + str(CurrPlayer) + 'label'
+        elif globals()[user] == 'Navigator': # If navigator uses move and it is not used on navigator
+            while target == str(CurrPlayer):
+                target = askstring(title = 'Enter a Number',prompt = 'Enter the user (Enter a number)')
+            target = 'c' + target +'label'
         xvalue = globals()[target].winfo_x()
         yvalue = globals()[target].winfo_y()
         if target == 'c1label':
@@ -1320,8 +1446,16 @@ def Right():
     global c2label
     global c3label
     global c4label
+    global naviflag
+    target = str(CurrPlayer)
     if ActionPoint != 0:
-        target = 'c' + str(CurrPlayer) + 'label'
+        user = 'C' + str(CurrPlayer) + 'Char'
+        if globals()[user] != 'Navigator':
+            target = 'c' + str(CurrPlayer) + 'label'
+        elif globals()[user] == 'Navigator': # If navigator uses move and it is not used on navigator
+            while target == str(CurrPlayer):
+                target = askstring(title = 'Enter a Number',prompt = 'Enter the user (Enter a number)')
+            target = 'c' + target +'label'
         xvalue = globals()[target].winfo_x()
         yvalue = globals()[target].winfo_y()
         if target == 'c1label':
@@ -1412,6 +1546,14 @@ def Right():
                     tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
             else:
                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+def upleft():
+    pass
+def upright():
+    pass
+def downleft():
+    pass
+def downright():
+    pass
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def Give():
@@ -1563,9 +1705,70 @@ def Sand():
                 if globals()[temp].cget('text') == target:
                     globals()[temp].configure(image = globals()[target])
             break
-            
         else:
             tk.messagebox.showwarning(message = 'Not available')
+
+#------------------------------------------------------------------------------------------------------------------------------------
+def ShoreUp():
+    global HalfFlooded
+    global CurrPlayer
+    global CurrentGameTile
+    targetmapcard = ''
+    flag = False
+    target = 'c' + str(CurrPlayer) + 'label'
+    xvalue = globals()[target].winfo_x()
+    yvalue = globals()[target].winfo_y()
+    if CurrPlayer == 2:
+        xvalue -= 50
+    elif CurrPlayer == 3:
+        yvalue -= 50
+    elif CurrPlayer == 4:
+        xvalue -= 50
+        yvalue -= 50
+    while True:
+        if targetmapcard  in CurrentGameTile or targetmapcard.lower() == 'q':
+            break
+        else:
+            targetmapcard = askstring(title = 'Type Q to cancel' ,prompt = 'Which  tile do you want to shore up? (Adjacent/Currently on)')
+    if targetmapcard.lower() != 'q':
+        for i in range (1,25):
+            temp = 'mapcard' + str(i)
+            name = globals()[temp].cget('text')
+            xcard = globals()[temp].winfo_x()
+            ycard = globals()[temp].winfo_y()
+            if xcard == xvalue and ycard == yvalue - 100 and name == targetmapcard: #Card on top
+                flag = True
+                break
+            elif xcard == xvalue and ycard == yvalue - 100 and name == targetmapcard: #Card below
+                flag = True
+                break
+            elif xcard == xvalue - 100 and ycard == yvalue and name == targetmapcard: #Card to the left
+                flag = True
+                break
+            elif xcard == xvalue + 100 and ycard == yvalue and name == targetmapcard: #Card to the right
+                flag = True
+                break
+            elif xcard == xvalue and ycard == yvalue and name == targetmapcard: #Card currently on:
+                flag = True
+                break
+    if flag:       
+        HalfFlooded.remove(name)
+        globals()[temp].configure(image = globals()[name])
+        updateAction()
+
+#------------------------------------------------------------------------------------------------------------------------------------
+def ExplorerSU(): #Explorer shore up
+    pass
+
+#------------------------------------------------------------------------------------------------------------------------------------
+def EngShoreUp():
+    global CurrPlayer
+    global ActionPoint
+    if globals()['C' + str(CurrPlayer) + 'Char'] == 'Engineer':
+        ShoreUp()
+        ShoreUp()
+        ActionPoint += 2
+        updateAction()
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def Capture(): #For taking treasure cards
@@ -1707,6 +1910,10 @@ def UseCard():
             break
 
 #------------------------------------------------------------------------------------------------------------------------------------
+def character():
+    tk.messagebox.showinfo(title='Info',message='Pilot Blue, Diver Black, Engineer Red, Explorer Green, Messenger White, Navigator Yellow.')
+    
+#------------------------------------------------------------------------------------------------------------------------------------ 
 def getinput():
     global NumPlayers
     global WaterTick
@@ -1782,6 +1989,8 @@ def EndTurn():
     global CurrPlayer
     global ActionPoint
     global floodcardflag
+    global heliflag
+    heliflag = True
     if floodcardflag == True:
         if CurrPlayer == 4:
             CurrPlayer = 1
@@ -1906,6 +2115,23 @@ Action.place(x=50,y=50)
 #Acquired & Unaquired Items
 AI = Label(gamepage, text = 'Acquired Items : ' + str(AcquiredItems))
 AI.place(x=50,y=0)
+
+#Abiliy Buttons
+NM = Button(gamepage, text = 'Navigator Move', command = NavigatorMove)
+NM.place(x=875 , y=175)
+
+ES = Button(gamepage, text = 'Engineer ShoreUp', command = EngShoreUp)
+ES.place(x=875 , y=205)
+
+PH = Button(gamepage, text = 'Pilot Heli', command = PilotHeli)
+PH.place(x=875 , y=235)
+
+MG = Button(gamepage, text = 'Messenger Give', command = MessengerGive)
+MG.place(x=875 , y=265 )
+
+#Character Information
+CI = Button(gamepage, text = 'Character Colours', command = character)
+CI.place(x = 750 , y = 0)
 
 #Card & Utility Buttons
 
