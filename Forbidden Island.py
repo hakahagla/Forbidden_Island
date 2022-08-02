@@ -27,6 +27,7 @@ Navigator: Move another player up to 2 adjacent tiles for 1 action
 #Imports--------------------------------------------------------------------------------------------------------------------
 
 from itertools import filterfalse
+from msilib.schema import ActionText
 import tkinter as tk
 from tkinter import *
 from tkinter.simpledialog import askstring
@@ -79,6 +80,7 @@ HalfFlooded = [] #Currently HalfFlooded
 TreasureDiscard = []
 WaterTick = 0
 heliflag = True
+accessflag = False
 FloodCardNum = 2 #Number of flood card to be drawn
 
 #Image Import------------------------------------------------------------------------------------------------------------------------------------
@@ -397,9 +399,9 @@ def MessengerGive():
     global ActionPoint
     global CurrPlayer
     global NumPlayers
-    if globals()['C' + str(CurrPlayer) + 'Char'] == 'Messenger:':
+    if globals()['C' + str(CurrPlayer) + 'Char'] == 'Messenger':
         if ActionPoint != 0:
-            tplayer = askstring (title='Do no press cancel', prompt='Select a player(EnterNumber)')#tplayer is the target player
+            tplayer = askstring (title='Enter Number', prompt='Select a player (Do no press cancel)')#tplayer is the target player
             targetdeck = 'C' + tplayer
             while True:
                 if tplayer == '1':
@@ -437,11 +439,13 @@ def MessengerGive():
 #------------------------------------------------------------------------------------------------------------------------------------
 def NavigatorMove():
     global CurrPlayer
+    global accessflag
     if globals()['C' + str(CurrPlayer) + 'Char'] ==  'Navigator':
+        accessflag = True
         temp = ''
         for i in range(0,2):
             while temp.lower() != 'up' or temp.lower() != 'down' or temp.lower() != 'left' or temp.lower() != 'right':
-                temp = askstring(title = '', prompt = 'Do you want to move Up, Down, Left or Right?')
+                temp = askstring(title = '', prompt = 'Do you want to move Up, Down, Left, Right or Stay?')
                 if temp.lower() == 'up':
                     Up()
                     break
@@ -451,9 +455,12 @@ def NavigatorMove():
                 elif temp.lower() == 'left':
                     Left()
                     break
-                elif temp.lwoer == 'right':
+                elif temp.lower() == 'right':
                     Right()
                     break
+                elif temp.lower() == 'stay':
+                    break
+        accessflag = False
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def checkLoss(): 
@@ -882,19 +889,19 @@ def SetWaterMark():
 #------------------------------------------------------------------------------------------------------------------------------------
 def DiscardSelect():
     global CurrPlayer
-    while len(C1) > 5:
+    while len(C1) > 999:
         unwanted = askstring(title="Discard",prompt='Player 1:' +str(C1))
         C1.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while len(C1) > 5:
+    while len(C1) > 999:
         unwanted = askstring(title="Discard",prompt='Player 2:' +str(C2))
         C2.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while len(C3) > 5:
+    while len(C3) > 999:
         unwanted = askstring(title="Discard",prompt='Player 3:' +str(C3))
         C3.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while len(C4) > 5:
+    while len(C4) > 999:
         unwanted = askstring(title="Discard",prompt='Player 4:' +str(C4))
         C4.remove(unwanted)
         TreasureDiscard.append(unwanted)
@@ -1117,6 +1124,786 @@ def checkFlood(xcard,ycard):
                 return True
                 
 #------------------------------------------------------------------------------------------------------------------------------------
+def DiverUp():
+    global CurrPlayer
+    global CurrentGameTile
+    placedflag = False
+    target = 'c' + str(CurrPlayer) + 'label'
+    xvalue = globals()[target].winfo_x()
+    yvalue = globals()[target].winfo_y()
+    if target == 'c1label': 
+        if yvalue >= 120 and xvalue >= 400 and xvalue <= 500:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                yvalue -= 100 # Moves up
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break 
+                if placedflag:
+                    break
+        elif yvalue >= 220 and tempx >= 300 and xvalue <= 600:
+            for i in range(0,5):
+                yvalue -= 100 # Moves up
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif yvalue >= 320 and xvalue >= 200 and xvalue <= 700:
+            for i in range(0,3):
+                yvalue -= 100 # Moves up
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c2label': 
+        tempx = xvalue -50
+        if yvalue >= 120 and tempx >= 400 and tempx <= 500:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                yvalue -= 100 # Moves up
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break  
+                if placedflag:
+                    break
+        elif yvalue >= 220 and tempx >= 300 and tempx <= 600:
+            for i in range(0,5):
+                yvalue -= 100 # Moves up
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif yvalue >= 320 and tempx >= 200 and tempx <= 700:
+            for i in range(0,3):
+                yvalue -= 100 # Moves up
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c3label':
+        tempy = yvalue -50
+        if tempy >= 120 and xvalue >= 400 and xvalue <= 500:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                yvalue -= 100 # Moves up
+                tempy -= 100
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break   
+                if placedflag:
+                    break
+        elif tempy >= 220 and xvalue >= 300 and xvalue <= 600:
+            for i in range(0,5):
+                yvalue -= 100 # Moves up
+                tempy -= 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif tempy >= 320 and xvalue >= 200 and xvalue <= 700:
+            for i in range(0,3):
+                yvalue -= 100 # Moves up
+                tempy -= 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c4label': 
+        tempx = xvalue -50
+        tempy = yvalue -50
+        if tempy >= 120 and tempx >= 400 and tempx <= 500:
+            for i in range(0,7):
+                yvalue -= 100 # Moves up
+                tempy -= 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break 
+                if placedflag:
+                    break
+        elif tempy >= 220 and tempx >= 300 and tempx <= 600:
+            for i in range(0,5):
+                yvalue -= 100 # Moves up
+                tempy -= 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif tempy >= 320 and tempx >= 200 and tempx <= 700:
+            for i in range(0,3):
+                yvalue -= 100 # Moves up
+                tempy -= 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+def DiverDown():
+    global CurrPlayer
+    global CurrentGameTile
+    placedflag = False
+    target = 'c' + str(CurrPlayer) + 'label'
+    xvalue = globals()[target].winfo_x()
+    yvalue = globals()[target].winfo_y()
+    if target == 'c1label': 
+        if yvalue <= 420 and xvalue >= 400 and xvalue <= 500:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                yvalue += 100
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif yvalue <= 320 and xvalue >= 300 and xvalue <= 600:
+            for i in range(0,5):
+                yvalue += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif yvalue <= 220 and xvalue >= 200 and xvalue <= 700:
+            for i in range(0,3):
+                yvalue += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c2label': 
+        tempx = xvalue -50
+        if yvalue <= 420 and tempx >= 400 and tempx <= 500:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                yvalue += 100
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break   
+                if placedflag:
+                    break 
+        elif yvalue <= 320 and tempx >= 300 and tempx <= 600:
+            for i in range(0,5):
+                yvalue += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif yvalue <= 220 and tempx >= 200 and tempx <= 700:
+            for i in range(0,3):
+                yvalue += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c3label':
+        tempy = yvalue -50
+        if tempy <= 420 and xvalue >= 400 and xvalue <= 500:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                yvalue += 100
+                tempy += 100
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break   
+                if placedflag:
+                    break
+        elif tempy <= 320 and xvalue >= 300 and xvalue <= 600:
+            for i in range(0,5):
+                yvalue += 100
+                tempy += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif tempy <= 220 and xvalue >= 200 and xvalue <= 700:
+            for i in range(0,3):
+                yvalue += 100
+                tempy += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c4label': 
+        tempx = xvalue -50
+        tempy = yvalue -50
+        if tempy <= 420 and tempx >= 400 and tempx <= 500:
+            for i in range(0,7):
+                yvalue += 100
+                tempy += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break 
+        elif tempy <= 320 and tempx >= 300 and tempx <= 600:
+            for i in range(0,5):
+                yvalue += 100
+                tempy += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif tempy <= 220 and tempx >= 200 and tempx <= 700:
+            for i in range(0,3):
+                yvalue += 100
+                tempy += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break                            
+                if placedflag:
+                    break
+def DiverLeft():
+    global CurrPlayer
+    global CurrentGameTile
+    placedflag = False
+    target = 'c' + str(CurrPlayer) + 'label'
+    xvalue = globals()[target].winfo_x()
+    yvalue = globals()[target].winfo_y()
+    if target == 'c1label': 
+        if xvalue >= 300 and yvalue >= 220 and yvalue <= 320:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                xvalue -= 100 
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif xvalue >= 400 and yvalue >= 120 and yvalue <= 420:
+            for i in range(0,5):
+                xvalue -= 100 
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif xvalue >= 500 and yvalue >= 20 and yvalue <= 520:
+            for i in range(0,3):
+                xvalue -= 100 
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c2label': 
+        tempx = xvalue -50
+        if tempx >= 300 and yvalue >= 220 and yvalue <= 320:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                xvalue -= 100
+                tempx -= 100
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break   
+                if placedflag:
+                    break
+        elif tempx >= 400 and yvalue >= 120 and yvalue <= 420:
+            for i in range(0,5):
+                xvalue -= 100 
+                tempx -= 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif tempx >= 500 and yvalue >= 20 and yvalue <= 520:
+            for i in range(0,3):
+                xvalue -= 100
+                tempx -= 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c3label':
+        tempy = yvalue -50
+        if xvalue >= 300 and tempy >= 220 and tempy <= 320:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                xvalue -= 100 
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break   
+                if placedflag:
+                    break
+        elif xvalue >= 400 and tempy >= 120 and tempy <= 420:
+            for i in range(0,5):
+                xvalue -= 100 
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif xvalue >= 500 and tempy >= 20 and tempy <= 520:
+            for i in range(0,3):
+                xvalue -= 100 
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c4label': 
+        tempx = xvalue -50
+        tempy = yvalue -50
+        if tempx >= 300 and tempy >= 220 and tempy <= 320:
+            for i in range(0,7):
+                xvalue -= 100 
+                tempx -= 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break  
+        elif tempx >= 400 and tempy >= 120 and tempy <= 420:
+            for i in range(0,5):
+                xvalue -= 100 
+                tempx -= 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif tempx >= 500 and tempy >= 20 and tempy <= 520:
+            for i in range(0,3):
+                xvalue -= 100 
+                tempx -= 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break                            
+                if placedflag:
+                    break
+def DiverRight():
+    global CurrPlayer
+    global CurrentGameTile
+    placedflag = False
+    target = 'c' + str(CurrPlayer) + 'label'
+    xvalue = globals()[target].winfo_x()
+    yvalue = globals()[target].winfo_y()
+    if target == 'c1label': 
+        if xvalue <= 600 and yvalue >= 220 and yvalue <= 320:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                xvalue += 100 
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif xvalue <= 500 and yvalue >= 120 and yvalue <= 420:
+            for i in range(0,5):
+                xvalue += 100 
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif xvalue <= 400 and yvalue >= 20 and yvalue <= 520:
+            for i in range(0,3):
+                xvalue += 100 
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c2label': 
+        tempx = xvalue -50
+        if tempx <= 600 and yvalue >= 220 and yvalue <= 320:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                xvalue += 100
+                tempx += 100
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break   
+                if placedflag:
+                    break
+        elif tempx <= 500 and yvalue >= 120 and yvalue <= 420:
+            for i in range(0,5):
+                xvalue += 100 
+                tempx += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif tempx <= 400 and yvalue >= 20 and yvalue <= 520:
+            for i in range(0,3):
+                xvalue += 100
+                tempx += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and yvalue == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c3label':
+        tempy = yvalue -50
+        if xvalue <= 600 and tempy >= 220 and tempy <= 320:
+            for i in range(0,7):
+                #Loops through all the possible mapcards in the direction
+                xvalue += 100 
+                #Identify which card it is
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break   
+                if placedflag:
+                    break
+        elif xvalue <= 500 and tempy >= 120 and tempy <= 420:
+            for i in range(0,5):
+                xvalue += 100 
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif xvalue <= 400 and tempy >= 20 and tempy <= 520:
+            for i in range(0,3):
+                xvalue += 100 
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if xvalue == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+    elif target == 'c4label': 
+        tempx = xvalue -50
+        tempy = yvalue -50
+        if tempx <= 600 and tempy >= 220 and tempy <= 320:
+            for i in range(0,7):
+                xvalue += 100 
+                tempx += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break  
+        elif tempx <= 500 and tempy >= 120 and tempy <= 420:
+            for i in range(0,5):
+                xvalue += 100 
+                tempx += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break
+                if placedflag:
+                    break
+        elif tempx <= 400 and tempy >= 20 and tempy <= 520:
+            for i in range(0,3):
+                xvalue += 100 
+                tempx += 100
+                for j in range(1,25):
+                    targetcard = 'mapcard'+str(j)
+                    name = globals()[targetcard].cget('text')
+                    if tempx == globals()[targetcard].winfo_x() and tempy == globals()[targetcard].winfo_y():
+                        if name in CurrentGameTile:
+                            globals()[target].place(x=xvalue,y=yvalue)
+                            placedflag = True
+                            updateAction()
+                            break                            
+                if placedflag:
+                    break
 def Up():
     global CurrPlayer
     global ActionPoint
@@ -1128,102 +1915,107 @@ def Up():
     target = str(CurrPlayer)
     if ActionPoint != 0:
         user = 'C' + str(CurrPlayer) + 'Char'
-        if globals()[user] != 'Navigator':
-            target = 'c' + str(CurrPlayer) + 'label'
-        elif globals()[user] == 'Navigator': # If navigator uses move and it is not used on navigator
-            while target == str(CurrPlayer):
-                target = askstring(title = 'Enter a Number',prompt = 'Which Player do you want to move (Cannot be yourself)')
-            target = 'c' + target +'label'
-        xvalue = globals()[target].winfo_x()
-        yvalue = globals()[target].winfo_y()
-        if target == 'c1label': 
-            if yvalue >= 120 and xvalue >= 400 and xvalue <= 500: #Movement of columns 3 and 4
-                if checkFlood(xvalue, yvalue - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
+        if globals()[user] == 'Diver':
+            DiverUp()
+        else:
+            if globals()[user] != 'Navigator':
+                target = 'c' + str(CurrPlayer) + 'label'
+            elif globals()[user] == 'Navigator' and accessflag == True: # If navigator uses move and it is not used on navigator
+                while target == str(CurrPlayer):
+                    target = askstring(title = 'Enter a Number',prompt = 'Which Player do you want to move (Cannot be yourself)')
+                target = 'c' + target +'label'
+            elif globals()[user] == 'Navigator' and accessflag == False:
+                target = 'c' + str(CurrPlayer) + 'label'
+            xvalue = globals()[target].winfo_x()
+            yvalue = globals()[target].winfo_y()
+            if target == 'c1label': 
+                if yvalue >= 120 and xvalue >= 400 and xvalue <= 500: #Movement of columns 3 and 4
+                    if checkFlood(xvalue, yvalue - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+                elif yvalue >= 220 and tempx >= 300 and xvalue <= 600: #Movement of columns 2 and 5
+                    if checkFlood(xvalue, yvalue - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+                elif yvalue >= 320 and xvalue >= 200 and xvalue <= 700: #Movement of columns 1 and 6
+                    if checkFlood(xvalue, yvalue - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
                 else:
                     tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            elif yvalue >= 220 and xvalue >= 300 and xvalue <= 600: #Movement of columns 2 and 5
-                if checkFlood(xvalue, yvalue - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
+            elif target == 'c2label':
+                tempx = xvalue -50
+                if yvalue >= 120 and tempx >= 400 and tempx <= 500: #Movement of columns 3 and 4
+                    if checkFlood(tempx, yvalue - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+                elif yvalue >= 220 and tempx >= 300 and tempx <= 600: #Movement of columns 2 and 5
+                    if checkFlood(tempx, yvalue - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+                elif yvalue >= 320 and tempx >= 200 and tempx <= 700: #Movement of columns 1 and 6
+                    if checkFlood(tempx, yvalue - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
                 else:
                     tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            elif yvalue >= 320 and xvalue >= 200 and xvalue <= 700: #Movement of columns 1 and 6
-                if checkFlood(xvalue, yvalue - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
+            elif target == 'c3label':
+                tempy = yvalue -50
+                if tempy >= 120 and xvalue >= 400 and xvalue <= 500: #Movement of columns 3 and 4
+                    if checkFlood(xvalue, tempy - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+                elif tempy >= 220 and xvalue >= 300 and xvalue <= 600: #Movement of columns 2 and 5
+                    if checkFlood(xvalue, tempy - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+                elif tempy >= 320 and xvalue >= 200 and xvalue <= 700: #Movement of columns 1 and 6
+                    if checkFlood(xvalue, tempy - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
                 else:
                     tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            else:
-                tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-        elif target == 'c2label':
-            tempx = xvalue -50
-            if yvalue >= 120 and tempx >= 400 and tempx <= 500: #Movement of columns 3 and 4
-                if checkFlood(tempx, yvalue - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
+            elif target == 'c4label':
+                tempx = xvalue -50
+                tempy = yvalue -50
+                if tempy >= 120 and tempx >= 400 and tempx <= 500: #Movement of columns 3 and 4
+                    if checkFlood(tempx, tempy - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+                elif tempy >= 220 and tempx >= 300 and tempx <= 600: #Movement of columns 2 and 5
+                    if checkFlood(tempx, tempy - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
+                elif tempy >= 320 and tempx >= 200 and tempx <= 700: #Movement of columns 1 and 6
+                    if checkFlood(tempx, tempy - 100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue - 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
                 else:
                     tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            elif yvalue >= 220 and tempx >= 300 and tempx <= 600: #Movement of columns 2 and 5
-                if checkFlood(tempx, yvalue - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            elif yvalue >= 320 and tempx >= 200 and tempx <= 700: #Movement of columns 1 and 6
-                if checkFlood(tempx, yvalue - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            else:
-                tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-        elif target == 'c3label':
-            tempy = yvalue -50
-            if tempy >= 120 and xvalue >= 400 and xvalue <= 500: #Movement of columns 3 and 4
-                if checkFlood(xvalue, tempy - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            elif tempy >= 220 and xvalue >= 300 and xvalue <= 600: #Movement of columns 2 and 5
-                if checkFlood(xvalue, tempy - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            elif tempy >= 320 and xvalue >= 200 and xvalue <= 700: #Movement of columns 1 and 6
-                if checkFlood(xvalue, tempy - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            else:
-                tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-        elif target == 'c4label':
-            tempx = xvalue -50
-            tempy = yvalue -50
-            if tempy >= 120 and tempx >= 400 and tempx <= 500: #Movement of columns 3 and 4
-                if checkFlood(tempx, tempy - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            elif tempy >= 220 and tempx >= 300 and tempx <= 600: #Movement of columns 2 and 5
-                if checkFlood(tempx, tempy - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            elif tempy >= 320 and tempx >= 200 and tempx <= 700: #Movement of columns 1 and 6
-                if checkFlood(tempx, tempy - 100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue - 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
-            else:
-                tk.messagebox.showwarning(title='Alert',message='Cannot move up.')
 def Down():
     global CurrPlayer
     global ActionPoint
@@ -1235,102 +2027,107 @@ def Down():
     target = str(CurrPlayer)
     if ActionPoint != 0:
         user = 'C' + str(CurrPlayer) + 'Char'
-        if globals()[user] != 'Navigator':
-            target = 'c' + str(CurrPlayer) + 'label'
-        elif globals()[user] == 'Navigator': # If navigator uses move and it is not used on navigator
-            while target == str(CurrPlayer):
-                target = askstring(title = 'Enter a Number',prompt = 'Enter the user (Enter a number)')
-            target = 'c' + target +'label'
-        xvalue = globals()[target].winfo_x()
-        yvalue = globals()[target].winfo_y()  
-        if target == 'c1label':
-            if yvalue <= 420 and xvalue >= 400 and xvalue <= 500:
-                if checkFlood(xvalue,yvalue+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
+        if globals()[user] == 'Diver':
+            DiverDown()
+        else:
+            if globals()[user] != 'Navigator':
+                target = 'c' + str(CurrPlayer) + 'label'
+            elif globals()[user] == 'Navigator' and accessflag == True: # If navigator uses move and it is not used on navigator
+                while target == str(CurrPlayer):
+                    target = askstring(title = 'Enter a Number',prompt = 'Which Player do you want to move (Cannot be yourself)')
+                target = 'c' + target +'label'
+            elif globals()[user] == 'Navigator' and accessflag == False:
+                target = 'c' + str(CurrPlayer) + 'label'
+            xvalue = globals()[target].winfo_x()
+            yvalue = globals()[target].winfo_y()
+            if target == 'c1label':
+                if yvalue <= 420 and xvalue >= 400 and xvalue <= 500:
+                    if checkFlood(xvalue,yvalue+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+                elif yvalue <= 320 and xvalue >= 300 and xvalue <= 600:
+                    if checkFlood(xvalue,yvalue+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+                elif yvalue <= 220 and xvalue >= 200 and xvalue <= 700:
+                    if checkFlood(xvalue,yvalue+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
                 else:
                     tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            elif yvalue <= 320 and xvalue >= 300 and xvalue <= 600:
-                if checkFlood(xvalue,yvalue+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
+            elif target == 'c2label':
+                tempx = xvalue -50
+                if yvalue <= 420 and tempx >= 400 and tempx <= 500:
+                    if checkFlood(tempx,yvalue+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+                elif yvalue <= 320 and tempx >= 300 and tempx <= 600:
+                    if checkFlood(tempx,yvalue+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+                elif yvalue <= 220 and tempx >= 200 and tempx <= 700:
+                    if checkFlood(tempx,yvalue+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
                 else:
                     tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            elif yvalue <= 220 and xvalue >= 200 and xvalue <= 700:
-                if checkFlood(xvalue,yvalue+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
+            elif target == 'c3label':
+                tempy = yvalue -50
+                if tempy <= 420 and xvalue >= 400 and xvalue <= 500:
+                    if checkFlood(xvalue,tempy+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+                elif tempy <= 320 and xvalue >= 300 and xvalue <= 600:
+                    if checkFlood(xvalue,tempy+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+                elif tempy <= 220 and xvalue >= 200 and xvalue <= 700:
+                    if checkFlood(xvalue,tempy+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
                 else:
                     tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            else:
-                tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-        elif target == 'c2label':
-            tempx = xvalue -50
-            if yvalue <= 420 and tempx >= 400 and tempx <= 500:
-                if checkFlood(tempx,yvalue+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
+            elif target == 'c4label':
+                tempx = xvalue -50
+                tempy = yvalue -50
+                if tempy <= 420 and tempx >= 400 and tempx <= 500:
+                    if checkFlood(tempx,tempy+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+                elif tempy <= 320 and tempx >= 300 and tempx <= 600:
+                    if checkFlood(tempx,tempy+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
+                elif tempy <= 220 and tempx >= 200 and tempx <= 700:
+                    if checkFlood(tempx,tempy+100) == False:
+                        globals()[target].place(x = xvalue, y = yvalue + 100)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
                 else:
                     tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            elif yvalue <= 320 and tempx >= 300 and tempx <= 600:
-                if checkFlood(tempx,yvalue+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            elif yvalue <= 220 and tempx >= 200 and tempx <= 700:
-                if checkFlood(tempx,yvalue+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            else:
-                tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-        elif target == 'c3label':
-            tempy = yvalue -50
-            if tempy <= 420 and xvalue >= 400 and xvalue <= 500:
-                if checkFlood(xvalue,tempy+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            elif tempy <= 320 and xvalue >= 300 and xvalue <= 600:
-                if checkFlood(xvalue,tempy+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            elif tempy <= 220 and xvalue >= 200 and xvalue <= 700:
-                if checkFlood(xvalue,tempy+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            else:
-                tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-        elif target == 'c4label':
-            tempx = xvalue -50
-            tempy = yvalue -50
-            if tempy <= 420 and tempx >= 400 and tempx <= 500:
-                if checkFlood(tempx,tempy+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            elif tempy <= 320 and tempx >= 300 and tempx <= 600:
-                if checkFlood(tempx,tempy+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            elif tempy <= 220 and tempx >= 200 and tempx <= 700:
-                if checkFlood(tempx,tempy+100) == False:
-                    globals()[target].place(x = xvalue, y = yvalue + 100)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
-            else:
-                tk.messagebox.showwarning(title='Alert',message='Cannot move down.')
 def Left():
     global CurrPlayer
     global ActionPoint
@@ -1342,103 +2139,108 @@ def Left():
     target = str(CurrPlayer)
     if ActionPoint != 0:
         user = 'C' + str(CurrPlayer) + 'Char'
-        if globals()[user] != 'Navigator':
-            target = 'c' + str(CurrPlayer) + 'label'
-        elif globals()[user] == 'Navigator': # If navigator uses move and it is not used on navigator
-            while target == str(CurrPlayer):
-                target = askstring(title = 'Enter a Number',prompt = 'Enter the user (Enter a number)')
-            target = 'c' + target +'label'
-        xvalue = globals()[target].winfo_x()
-        yvalue = globals()[target].winfo_y()
-        if target == 'c1label':
-            if xvalue >= 300 and yvalue >= 220 and yvalue <= 320:
-                if checkFlood(xvalue-100,yvalue) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
+        if globals()[user] == 'Diver':
+            DiverLeft()
+        else:
+            if globals()[user] != 'Navigator':
+                target = 'c' + str(CurrPlayer) + 'label'
+            elif globals()[user] == 'Navigator' and accessflag == True: # If navigator uses move and it is not used on navigator
+                while target == str(CurrPlayer):
+                    target = askstring(title = 'Enter a Number',prompt = 'Which Player do you want to move (Cannot be yourself)')
+                target = 'c' + target +'label'
+            elif globals()[user] == 'Navigator' and accessflag == False:
+                target = 'c' + str(CurrPlayer) + 'label'
+            xvalue = globals()[target].winfo_x()
+            yvalue = globals()[target].winfo_y()
+            if target == 'c1label':
+                if xvalue >= 300 and yvalue >= 220 and yvalue <= 320:
+                    if checkFlood(xvalue-100,yvalue) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+                elif xvalue >= 400 and yvalue >= 120 and yvalue <= 420:
+                    if checkFlood(xvalue-100,yvalue) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+                elif xvalue >= 500 and yvalue >= 20 and yvalue <= 520:
+                    if checkFlood(xvalue-100,yvalue) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
                 else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            elif xvalue >= 400 and yvalue >= 120 and yvalue <= 420:
-                if checkFlood(xvalue-100,yvalue) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
+                       tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+            elif target == 'c2label':
+                tempx = xvalue -50
+                if tempx >= 300 and yvalue >= 220 and yvalue <= 320:
+                    if checkFlood(tempx-100,yvalue) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+                elif tempx >= 400 and yvalue >= 120 and yvalue <= 420:
+                    if checkFlood(tempx-100,yvalue) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+                elif tempx >= 500 and yvalue >= 20 and yvalue <= 520:
+                    if checkFlood(tempx-100,yvalue) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
                 else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            elif xvalue >= 500 and yvalue >= 20 and yvalue <= 520:
-                if checkFlood(xvalue-100,yvalue) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
+                       tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+            elif target == 'c3label':
+                tempy = yvalue -50
+                if xvalue >= 300 and tempy >= 220 and tempy <= 320:
+                    if checkFlood(xvalue-100,tempy) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+                elif xvalue >= 400 and tempy >= 120 and tempy <= 420:
+                    if checkFlood(xvalue-100,tempy) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+                elif xvalue >= 500 and tempy >= 20 and tempy <= 520:
+                    if checkFlood(xvalue-100,tempy) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
                 else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            else:
-                   tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-        elif target == 'c2label':
-            tempx = xvalue -50
-            if tempx >= 300 and yvalue >= 220 and yvalue <= 320:
-                if checkFlood(tempx-100,yvalue) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            elif tempx >= 400 and yvalue >= 120 and yvalue <= 420:
-                if checkFlood(tempx-100,yvalue) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            elif tempx >= 500 and yvalue >= 20 and yvalue <= 520:
-                if checkFlood(tempx-100,yvalue) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            else:
-                   tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-        elif target == 'c3label':
-            tempy = yvalue -50
-            if xvalue >= 300 and tempy >= 220 and tempy <= 320:
-                if checkFlood(xvalue-100,tempy) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            elif xvalue >= 400 and tempy >= 120 and tempy <= 420:
-                if checkFlood(xvalue-100,tempy) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            elif xvalue >= 500 and tempy >= 20 and tempy <= 520:
-                if checkFlood(xvalue-100,tempy) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            else:
-                   tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-        elif target == 'c4label':
-            tempx = xvalue-50
-            tempy = yvalue-50
-            if tempx >= 300 and tempy >= 220 and tempy <= 320:
-                if checkFlood(tempx-100,tempy) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            elif tempx >= 400 and tempy >= 120 and tempy <= 420:
-                if checkFlood(tempx-100,tempy) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            elif tempx >= 500 and tempy >= 20 and tempy <= 520:
-                if checkFlood(tempx-100,tempy) == False:
-                    globals()[target].place(x = xvalue - 100, y = yvalue)
-                    updateAction()
+                       tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+            elif target == 'c4label':
+                tempx = xvalue-50
+                tempy = yvalue-50
+                if tempx >= 300 and tempy >= 220 and tempy <= 320:
+                    if checkFlood(tempx-100,tempy) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+                elif tempx >= 400 and tempy >= 120 and tempy <= 420:
+                    if checkFlood(tempx-100,tempy) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+                elif tempx >= 500 and tempy >= 20 and tempy <= 520:
+                    if checkFlood(tempx-100,tempy) == False:
+                        globals()[target].place(x = xvalue - 100, y = yvalue)
+                        updateAction()
                 
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
                 else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
-            else:
-                   tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
+                       tk.messagebox.showwarning(title='Alert',message='Cannot move left.')
 def Right():
     global CurrPlayer
     global ActionPoint
@@ -1450,110 +2252,107 @@ def Right():
     target = str(CurrPlayer)
     if ActionPoint != 0:
         user = 'C' + str(CurrPlayer) + 'Char'
-        if globals()[user] != 'Navigator':
-            target = 'c' + str(CurrPlayer) + 'label'
-        elif globals()[user] == 'Navigator': # If navigator uses move and it is not used on navigator
-            while target == str(CurrPlayer):
-                target = askstring(title = 'Enter a Number',prompt = 'Enter the user (Enter a number)')
-            target = 'c' + target +'label'
-        xvalue = globals()[target].winfo_x()
-        yvalue = globals()[target].winfo_y()
-        if target == 'c1label':
-            if xvalue <= 600 and yvalue >= 220 and yvalue <= 320:
-                if checkFlood(xvalue+100,yvalue) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
+        if globals()[user] == 'Diver':
+            DiverRight()
+        else:
+            if globals()[user] != 'Navigator':
+                target = 'c' + str(CurrPlayer) + 'label'
+            elif globals()[user] == 'Navigator' and accessflag == True: # If navigator uses move and it is not used on navigator
+                while target == str(CurrPlayer):
+                    target = askstring(title = 'Enter a Number',prompt = 'Which Player do you want to move (Cannot be yourself)')
+                target = 'c' + target +'label'
+            elif globals()[user] == 'Navigator' and accessflag == False:
+                target = 'c' + str(CurrPlayer) + 'label'
+            xvalue = globals()[target].winfo_x()
+            yvalue = globals()[target].winfo_y()
+            if target == 'c1label':
+                if xvalue <= 600 and yvalue >= 220 and yvalue <= 320:
+                    if checkFlood(xvalue+100,yvalue) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+                elif xvalue <= 500 and yvalue >= 120 and yvalue <= 420:
+                    if checkFlood(xvalue+100,yvalue) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+                elif xvalue <= 400 and yvalue >= 20 and yvalue <= 520:
+                    if checkFlood(xvalue+100,yvalue) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
                 else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            elif xvalue <= 500 and yvalue >= 120 and yvalue <= 420:
-                if checkFlood(xvalue+100,yvalue) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
+                       tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+            elif target == 'c2label':
+                tempx = xvalue -50
+                if tempx <= 600 and yvalue >= 220 and yvalue <= 320:
+                    if checkFlood(tempx+100,yvalue) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+                elif tempx <= 500 and yvalue >= 120 and yvalue <= 420:
+                    if checkFlood(tempx+100,yvalue) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+                elif tempx <= 400 and yvalue >= 20 and yvalue <= 520:
+                    if checkFlood(tempx+100,yvalue) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
                 else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            elif xvalue <= 400 and yvalue >= 20 and yvalue <= 520:
-                if checkFlood(xvalue+100,yvalue) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
+                       tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+            elif target == 'c3label':
+                tempy = yvalue -50
+                if xvalue <= 600 and tempy >= 220 and tempy <= 320:
+                    if checkFlood(xvalue+100,tempy) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+                elif xvalue <= 500 and tempy >= 120 and tempy <= 420:
+                    if checkFlood(xvalue+100,tempy) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+                elif xvalue <= 400 and tempy >= 20 and tempy <= 520:
+                    if checkFlood(xvalue+100,tempy) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
                 else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            else:
-                   tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-        elif target == 'c2label':
-            tempx = xvalue -50
-            if tempx <= 600 and yvalue >= 220 and yvalue <= 320:
-                if checkFlood(tempx+100,yvalue) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
+                       tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+            elif target == 'c4label':
+                tempx = xvalue-50
+                tempy = yvalue -50
+                if tempx <= 600 and tempy >= 220 and tempy <= 320:
+                    if checkFlood(tempx+100,tempy) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+                elif tempx <= 500 and tempy >= 120 and tempy <= 420:
+                    if checkFlood(tempx+100,tempy) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
+                elif tempx <= 400 and tempy >= 20 and tempy <= 520:
+                    if checkFlood(tempx+100,tempy) == False:
+                        globals()[target].place(x = xvalue + 100, y = yvalue)
+                        updateAction()
+                    else:
+                        tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
                 else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            elif tempx <= 500 and yvalue >= 120 and yvalue <= 420:
-                if checkFlood(tempx+100,yvalue) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            elif tempx <= 400 and yvalue >= 20 and yvalue <= 520:
-                if checkFlood(tempx+100,yvalue) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            else:
-                   tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-        elif target == 'c3label':
-            tempy = yvalue -50
-            if xvalue <= 600 and tempy >= 220 and tempy <= 320:
-                if checkFlood(xvalue+100,tempy) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            elif xvalue <= 500 and tempy >= 120 and tempy <= 420:
-                if checkFlood(xvalue+100,tempy) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            elif xvalue <= 400 and tempy >= 20 and tempy <= 520:
-                if checkFlood(xvalue+100,tempy) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            else:
-                   tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-        elif target == 'c4label':
-            tempx = xvalue-50
-            tempy = yvalue -50
-            if tempx <= 600 and tempy >= 220 and tempy <= 320:
-                if checkFlood(tempx+100,tempy) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            elif tempx <= 500 and tempy >= 120 and tempy <= 420:
-                if checkFlood(tempx+100,tempy) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            elif tempx <= 400 and tempy >= 20 and tempy <= 520:
-                if checkFlood(tempx+100,tempy) == False:
-                    globals()[target].place(x = xvalue + 100, y = yvalue)
-                    updateAction()
-                else:
-                    tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-            else:
-                   tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
-def upleft():
-    pass
-def upright():
-    pass
-def downleft():
-    pass
-def downright():
-    pass
+                       tk.messagebox.showwarning(title='Alert',message='Cannot move right.')
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def Give():
@@ -1758,7 +2557,95 @@ def ShoreUp():
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def ExplorerSU(): #Explorer shore up
-    pass
+    global HalfFlooded
+    global CurrPlayer
+    global CurrentGameTile
+    targetmapcard = ''
+    flag = False
+    target = 'c' + str(CurrPlayer) + 'label'
+    if globals()['C' + str(CurrPlayer) + 'Char'] == 'Explorer':
+        xvalue = globals()[target].winfo_x()
+        yvalue = globals()[target].winfo_y()
+        if CurrPlayer == 2:
+            xvalue -= 50
+        elif CurrPlayer == 3:
+            yvalue -= 50
+        elif CurrPlayer == 4:
+            xvalue -= 50
+            yvalue -= 50
+        while True:
+            if targetmapcard  in CurrentGameTile or targetmapcard.lower() == 'q':
+                break
+            else:
+                targetmapcard = askstring(title = 'Type Q to cancel' ,prompt = 'Which  tile do you want to shore up? (Diagonal Only)')
+        if targetmapcard.lower() != 'q':
+            for i in range (1,25):
+                temp = 'mapcard' + str(i)
+                name = globals()[temp].cget('text')
+                xcard = globals()[temp].winfo_x()
+                ycard = globals()[temp].winfo_y()
+                if xcard == xvalue - 100 and ycard == yvalue - 100 and name == targetmapcard: #Card top left
+                    flag = True
+                    break
+                elif xcard == xvalue + 100 and ycard == yvalue - 100 and name == targetmapcard: #Card top right
+                    flag = True
+                    break
+                elif xcard == xvalue - 100 and ycard == yvalue + 100 and name == targetmapcard: #Card bottom left
+                    flag = True
+                    break
+                elif xcard == xvalue + 100 and ycard == yvalue  + 100 and name == targetmapcard: #Card bottom right
+                    flag = True
+                    break
+        if flag:       
+            HalfFlooded.remove(name)
+            globals()[temp].configure(image = globals()[name])
+            updateAction()
+
+#------------------------------------------------------------------------------------------------------------------------------------
+def ExplorerM():
+    global ActionPoint
+    global CurrPlayer
+    global CurrentGameTile
+    player = 'c'+ str(CurrPlayer) + 'label'
+    direction = ''
+    flag = False
+    if globals()['C' + str(CurrPlayer) + 'Char'] == 'Explorer':
+        while True:
+            if direction.lower() == 'q':
+                break
+            else:
+                direction = askstring(title = 'Type Q to cancel' ,prompt = 'Choose Direction (UL/UR/DL/DR)')
+                xvalue = globals()[player].winfo_x()
+                yvalue = globals()[player].winfo_y()
+                for i in range(1,25):
+                    target = 'mapcard' + str(i)
+                    xcard = globals()[target].winfo_x()
+                    ycard = globals()[target].winfo_y()
+                    name = globals()[target].cget('text')
+                    if direction.lower() == 'ul'  and xvalue - 100 == xcard and yvalue - 100 == ycard and name in CurrentGameTile: #Up Left
+                        globals()[player].place(x = xcard, y = ycard)
+                        ActionPoint -= 1
+                        flag = True
+                        break
+                    elif direction.lower() == 'ur'  and xvalue + 100 == xcard and yvalue - 100 == ycard and name in CurrentGameTile:
+                        globals()[player].place(x = xcard, y = ycard)
+                        ActionPoint -= 1
+                        flag = True
+                        break
+                    elif direction.lower() == 'dl'  and xvalue - 100 == xcard and yvalue + 100 == ycard and name in CurrentGameTile:
+                        globals()[player].place(x = xcard, y = ycard)
+                        ActionPoint -= 1
+                        flag = True
+                        break
+                    elif direction.lower() == 'dr'  and xvalue + 100 == xcard and yvalue + 100 == ycard and name in CurrentGameTile: 
+                        globals()[player].place(x = xcard, y = ycard)
+                        ActionPoint -= 1
+                        flag = True
+                        break
+                if flag == True:
+                    updateAction
+                    break
+                
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def EngShoreUp():
@@ -1994,22 +2881,22 @@ def EndTurn():
     if floodcardflag == True:
         if CurrPlayer == 4:
             CurrPlayer = 1
-            ActionPoint = 3
+            ActionPoint = 99
         elif CurrPlayer == 3:
             if NumPlayers == 3:
                 CurrPlayer = 1
             else:
                 CurrPlayer +=1
-            ActionPoint = 3
+            ActionPoint = 99
         elif CurrPlayer == 2:
             if NumPlayers == 2:
                 CurrPlayer = 1
             else:
                 CurrPlayer += 1
-            ActionPoint = 3
+            ActionPoint = 99
         elif CurrPlayer == 1:
             CurrPlayer += 1
-            ActionPoint = 3
+            ActionPoint = 99
         floodcardflag = False
         globals()['Action'].config(text = 'Action Point : ' + str(ActionPoint))
         globals()['CP'].config(text =  'Current Player : Player' + str(CurrPlayer))
@@ -2092,17 +2979,17 @@ UpButton = Button(gamepage, text = 'Up', command = Up)
 UpButton.place(x = 700, y = 600)
 
 DownButton = Button(gamepage, text = 'Down', command = Down)
-DownButton.place(x = 730, y = 600)
+DownButton.place(x = 725, y = 600)
 
 LeftButton = Button(gamepage, text = 'Left', command = Left)
-LeftButton.place(x = 700, y = 620)
+LeftButton.place(x = 700, y = 630)
 
 RightButton = Button(gamepage, text = 'Right', command = Right)
-RightButton.place(x = 730, y = 620)
+RightButton.place(x = 730, y = 630)
 
 #EndTurn Button
 ET = Button(gamepage, text = 'End Turn', command = EndTurn)
-ET.place(x = 780, y = 640)
+ET.place(x = 780, y = 655)
 
 #CurrPlayer Label
 CP = Label(gamepage, text = 'Current Player : Player' + str(CurrPlayer))
@@ -2129,6 +3016,12 @@ PH.place(x=875 , y=235)
 MG = Button(gamepage, text = 'Messenger Give', command = MessengerGive)
 MG.place(x=875 , y=265 )
 
+ExS = Button(gamepage, text = 'Explorer Shore Up', command = ExplorerSU)
+ExS.place(x=875 , y=295)
+
+ExM = Button(gamepage, text = 'Explorer Move', command = ExplorerM)
+ExM.place(x=875 , y=325)
+
 #Character Information
 CI = Button(gamepage, text = 'Character Colours', command = character)
 CI.place(x = 750 , y = 0)
@@ -2136,13 +3029,16 @@ CI.place(x = 750 , y = 0)
 #Card & Utility Buttons
 
 CardButton = Button(gamepage, text = 'UseCard', command = UseCard)
-CardButton.place(x = 780, y = 620)
+CardButton.place(x = 780, y = 630)
 
 GiveButton = Button(gamepage, text = 'Give', command = Give)
 GiveButton.place(x = 780, y = 600)
 
 CaptureButton = Button(gamepage, text = 'Cap Treasure', command = Capture)
-CaptureButton.place(x = 840 , y = 600)
+CaptureButton.place(x = 850 , y = 600)
+
+ShoreUpButton = Button(gamepage, text = 'Shore Up', command = ShoreUp)
+ShoreUpButton. place(x = 850 , y = 630)
 
 watertick = Label(gamepage,image=water0)
 watertick.place(x = 900,y=0)
