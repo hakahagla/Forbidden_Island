@@ -1,5 +1,10 @@
 # Forbidden Island
 
+# To Install
+* Download Forbidden_Isaland.py
+* Download images folder
+* Place them both in the same folder and run the python file.
+
 # 27th Apr 2022
 * Start created the various pages in tKinter
 * Camel case for variables, constants are in lowercase, classes is snake case
