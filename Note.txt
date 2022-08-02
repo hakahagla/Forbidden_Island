@@ -1,0 +1,7 @@
+Movement functions :
+Diver Up Down Left Right and Normal UDLR can be made much simpler just like in Explorer's movement
+I only figured this out last minute (when I was doing explorer's movements) RIP but I CBA to change the other movements as they work just as fine.
+This can reduce space and make code more efficient but since this program is not much for computers to handle I won't bother :)
+
+Repeated Structure:
+A lot of the subprograms have similar structure so they can be improved but I was just trying to get this done :)
