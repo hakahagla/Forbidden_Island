@@ -1,4 +1,0 @@
-Characters Abilities
-	Diver: Move through 1 of more adjacent flooded and/or missing tiles for 1 action.(Must end your turn on a tile)
-	Explorer:Move and/or shore up diagonally.
-
