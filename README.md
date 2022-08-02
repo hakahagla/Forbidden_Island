@@ -62,3 +62,8 @@
 * 4/6 character ability finished
 * Sorted problems listed
 * ---Assa
+
+# 1 Aug 2022
+* All character ability finished
+* Game is done!
+* --- Assa
