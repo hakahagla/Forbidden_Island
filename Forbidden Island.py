@@ -1,5 +1,5 @@
 #Forbidden Island
-#Last updated: 2022/7/31
+#Last updated: 2022/8/1
 
 '''
 Information
@@ -25,9 +25,6 @@ Navigator: Move another player up to 2 adjacent tiles for 1 action
 '''
 
 #Imports--------------------------------------------------------------------------------------------------------------------
-
-from itertools import filterfalse
-from msilib.schema import ActionText
 import tkinter as tk
 from tkinter import *
 from tkinter.simpledialog import askstring
@@ -889,19 +886,19 @@ def SetWaterMark():
 #------------------------------------------------------------------------------------------------------------------------------------
 def DiscardSelect():
     global CurrPlayer
-    while len(C1) > 999:
+    while len(C1) > 5:
         unwanted = askstring(title="Discard",prompt='Player 1:' +str(C1))
         C1.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while len(C1) > 999:
+    while len(C1) > 5:
         unwanted = askstring(title="Discard",prompt='Player 2:' +str(C2))
         C2.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while len(C3) > 999:
+    while len(C3) > 5:
         unwanted = askstring(title="Discard",prompt='Player 3:' +str(C3))
         C3.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while len(C4) > 999:
+    while len(C4) > 5:
         unwanted = askstring(title="Discard",prompt='Player 4:' +str(C4))
         C4.remove(unwanted)
         TreasureDiscard.append(unwanted)
@@ -2646,7 +2643,6 @@ def ExplorerM():
                     updateAction
                     break
                 
-
 #------------------------------------------------------------------------------------------------------------------------------------
 def EngShoreUp():
     global CurrPlayer
@@ -2881,22 +2877,22 @@ def EndTurn():
     if floodcardflag == True:
         if CurrPlayer == 4:
             CurrPlayer = 1
-            ActionPoint = 99
+            ActionPoint = 3
         elif CurrPlayer == 3:
             if NumPlayers == 3:
                 CurrPlayer = 1
             else:
                 CurrPlayer +=1
-            ActionPoint = 99
+            ActionPoint = 3
         elif CurrPlayer == 2:
             if NumPlayers == 2:
                 CurrPlayer = 1
             else:
                 CurrPlayer += 1
-            ActionPoint = 99
+            ActionPoint = 3
         elif CurrPlayer == 1:
             CurrPlayer += 1
-            ActionPoint = 99
+            ActionPoint = 3
         floodcardflag = False
         globals()['Action'].config(text = 'Action Point : ' + str(ActionPoint))
         globals()['CP'].config(text =  'Current Player : Player' + str(CurrPlayer))
