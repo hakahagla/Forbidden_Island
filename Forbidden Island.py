@@ -510,6 +510,7 @@ def DrawTreasure():
     global TreasureCards
     global TreasurePerTurn
     if TreasurePerTurn == True:
+        TreasurePerTurn = False
         if len(TreasureCards) > 0:
             firstCard = random.randint(0, len(TreasureCards)-1) #Realistically we should be picking the first card on top of the deck
             secondCard = random.randint(0, len(TreasureCards)-1) #But to add more fun and randomness, I am picking a random one
