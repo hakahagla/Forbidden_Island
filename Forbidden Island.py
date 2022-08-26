@@ -29,7 +29,6 @@ import tkinter as tk
 from tkinter import *
 from tkinter.simpledialog import askstring
 from tkinter.messagebox import askyesno
-from turtle import update
 from PIL import Image,ImageTk
 import random
 
@@ -79,6 +78,7 @@ WaterTick = 0
 heliflag = True
 accessflag = False
 FloodCardNum = 2 #Number of flood card to be drawn
+TreasurePerTurn = True
 
 #Image Import------------------------------------------------------------------------------------------------------------------------------------
 
@@ -365,7 +365,9 @@ def PilotHeli():
     if globals()['C' + str(CurrPlayer) + 'Char'] ==  'Pilot':
         if heliflag:
             while True:
-                target_p = askstring(title = 'Enter Number',prompt='Choose a player') # target player and target destination
+                target_p = askstring(title = 'Enter Number',prompt='Choose a player(Enter nothing to cancel)') # target player and target destination
+                if target_p == '':
+                    break
                 target_p = 'c' + target_p + 'label'
                 target_d = askstring(title = '',prompt='Choose destination')
                 if target_d in CurrentGameTile:
@@ -383,8 +385,9 @@ def PilotHeli():
                 globals()[target_p].place(x = xvalue, y = yvalue + 50)
             elif target_p == 'c4label':
                 globals()[target_p].place(x = xvalue + 50, y = yvalue + 50)
-            updateAction()
-            heliflag = False
+            if target_p != '':
+                updateAction()
+                heliflag = False
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def MessengerGive():
@@ -398,40 +401,41 @@ def MessengerGive():
     global NumPlayers
     if globals()['C' + str(CurrPlayer) + 'Char'] == 'Messenger':
         if ActionPoint != 0:
-            tplayer = askstring (title='Enter Number', prompt='Select a player (Do no press cancel)')#tplayer is the target player
+            tplayer = askstring (title='Enter Number', prompt='Select a player (Enter nothing to cancel)')#tplayer is the target player
             targetdeck = 'C' + tplayer
-            while True:
-                if tplayer == '1':
-                    targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
-                    if targetcard != '':
-                        globals()[targetdeck].remove(targetcard)
-                        C1.append(targetcard)
-                        DiscardSelect()
-                    break
-                elif tplayer == '2':
-                    targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
-                    if targetcard != '':
-                        globals()[targetdeck].remove(targetcard)
-                        C2.append(targetcard)
-                        DiscardSelect()
-                    break
-                elif tplayer == '3':
-                    targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
-                    if targetcard != '':
-                        globals()[targetdeck].remove(targetcard)
-                        C3.append(targetcard)
-                        DiscardSelect()
-                    break
-                elif tplayer == '4':
-                    targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
-                    if targetcard != '':
-                        globals()[targetdeck].remove(targetcard)
-                        C4.append(targetcard)
-                        DiscardSelect()
-                    break
-                else:
-                    tplayer = askstring (title='Give', prompt='Select a player(EnterNumber)')
-            updateAction()
+            if tplayer != '':
+                while True:
+                    if tplayer == '1':
+                        targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                        if targetcard != '':
+                            globals()[targetdeck].remove(targetcard)
+                            C1.append(targetcard)
+                            DiscardSelect()
+                        break
+                    elif tplayer == '2':
+                        targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                        if targetcard != '':
+                            globals()[targetdeck].remove(targetcard)
+                            C2.append(targetcard)
+                            DiscardSelect()
+                        break
+                    elif tplayer == '3':
+                        targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                        if targetcard != '':
+                            globals()[targetdeck].remove(targetcard)
+                            C3.append(targetcard)
+                            DiscardSelect()
+                        break
+                    elif tplayer == '4':
+                        targetcard = askstring(title='Give', prompt='Select Card:' + str(globals()[targetdeck]))
+                        if targetcard != '':
+                            globals()[targetdeck].remove(targetcard)
+                            C4.append(targetcard)
+                            DiscardSelect()
+                        break
+                    else:
+                        tplayer = askstring (title='Give', prompt='Select a player(EnterNumber)')
+                updateAction()
 
 #------------------------------------------------------------------------------------------------------------------------------------
 def NavigatorMove():
@@ -455,7 +459,7 @@ def NavigatorMove():
                 elif temp.lower() == 'right':
                     Right()
                     break
-                elif temp.lower() == 'stay':
+                elif temp.lower() == 'stay' or temp == '':
                     break
         accessflag = False
 
@@ -504,61 +508,64 @@ def DrawTreasure():
     global FloodPile
     global TreasureDiscard
     global TreasureCards
-    if len(TreasureCards) > 0:
-        firstCard = random.randint(0, len(TreasureCards)-1) #Realistically we should be picking the first card on top of the deck
-        secondCard = random.randint(0, len(TreasureCards)-1) #But to add more fun and randomness, I am picking a random one
-        print(TreasureCards[firstCard])
-        print(TreasureCards[secondCard])
-        if TreasureCards[firstCard] == "WatersRise":
-            random.shuffle(FloodDiscard)
-            FloodPile = FloodDiscard + FloodPile
-            FloodDiscard = []
-            ChangeWaterMark()
-            SetWaterMark()
-            changeFloodCardNum()
-        if TreasureCards[secondCard] == "WatersRise":
-            random.shuffle(FloodDiscard)
-            FloodPile = FloodDiscard + FloodPile
-            FloodDiscard = []
-            ChangeWaterMark()
-            SetWaterMark()
-            changeFloodCardNum()
-    #Append Card
-        if CurrPlayer == 4:
-            if TreasureCards[firstCard] != 'WatersRise':
-                C4.append(TreasureCards[firstCard])
-                DiscardSelect()
-            if TreasureCards[secondCard] != 'WatersRise':
-                C4.append(TreasureCards[secondCard])
-                DiscardSelect()
-        elif CurrPlayer == 3:
-            if TreasureCards[firstCard] != 'WatersRise':
-                C3.append(TreasureCards[firstCard])
-                DiscardSelect()
-            if TreasureCards[secondCard] != 'WatersRise':
-                C3.append(TreasureCards[secondCard])
-                DiscardSelect()
-        elif CurrPlayer == 2:
-            if TreasureCards[firstCard] != 'WatersRise':
-                C2.append(TreasureCards[firstCard])
-                DiscardSelect()
-            if TreasureCards[secondCard] != 'WatersRise':
-                C2.append(TreasureCards[secondCard])
-                DiscardSelect()
-        elif CurrPlayer == 1:
-            if TreasureCards[firstCard] != 'WatersRise':
-                C1.append(TreasureCards[firstCard])
-                DiscardSelect()
-            if TreasureCards[secondCard] != 'WatersRise':
-                C1.append(TreasureCards[secondCard])
-                DiscardSelect()
+    global TreasurePerTurn
+    if TreasurePerTurn == True:
+        if len(TreasureCards) > 0:
+            firstCard = random.randint(0, len(TreasureCards)-1) #Realistically we should be picking the first card on top of the deck
+            secondCard = random.randint(0, len(TreasureCards)-1) #But to add more fun and randomness, I am picking a random one
+            print(TreasureCards[firstCard])
+            print(TreasureCards[secondCard])
+            if TreasureCards[firstCard] == "WatersRise":
+                random.shuffle(FloodDiscard)
+                FloodPile = FloodDiscard + FloodPile
+                FloodDiscard = []
+                ChangeWaterMark()
+                SetWaterMark()
+                changeFloodCardNum()
+            if TreasureCards[secondCard] == "WatersRise":
+                random.shuffle(FloodDiscard)
+                FloodPile = FloodDiscard + FloodPile
+                FloodDiscard = []
+                ChangeWaterMark()
+                SetWaterMark()
+                changeFloodCardNum()
+        #Append Card
+            if CurrPlayer == 4:
+                if TreasureCards[firstCard] != 'WatersRise':
+                    C4.append(TreasureCards[firstCard])
+                    DiscardSelect()
+                if TreasureCards[secondCard] != 'WatersRise':
+                    C4.append(TreasureCards[secondCard])
+                    DiscardSelect()
+            elif CurrPlayer == 3:
+                if TreasureCards[firstCard] != 'WatersRise':
+                    C3.append(TreasureCards[firstCard])
+                    DiscardSelect()
+                if TreasureCards[secondCard] != 'WatersRise':
+                    C3.append(TreasureCards[secondCard])
+                    DiscardSelect()
+            elif CurrPlayer == 2:
+                if TreasureCards[firstCard] != 'WatersRise':
+                    C2.append(TreasureCards[firstCard])
+                    DiscardSelect()
+                if TreasureCards[secondCard] != 'WatersRise':
+                    C2.append(TreasureCards[secondCard])
+                    DiscardSelect()
+            elif CurrPlayer == 1:
+                if TreasureCards[firstCard] != 'WatersRise':
+                    C1.append(TreasureCards[firstCard])
+                    DiscardSelect()
+                if TreasureCards[secondCard] != 'WatersRise':
+                    C1.append(TreasureCards[secondCard])
+                    DiscardSelect()
 
+        else:
+            random.shuffle(TreasureDiscard)
+            TreasureCards = TreasureCards + TreasureDiscard
+            TreasureDiscard = []
+            DrawTreasure()
     else:
-        random.shuffle(TreasureDiscard)
-        TreasureCards = TreasureCards + TreasureDiscard
-        TreasureDiscard = []
-        DrawTreasure()
-
+        tk.messagebox.showwarning(title='Alert',message='You can draw treasure cards once per turn.')
 #------------------------------------------------------------------------------------------------------------------------------------
 def FloodShuffle():
     global FloodPile
@@ -774,6 +781,7 @@ def removeTile(card):
     global FloodPile
     global HalfFlooded
     global CurrentGameTile
+    global NumPlayers
     for i in range (0,24):
         target = 'mapcard' + str(i+1)
         if globals()[target].cget('text') == str(card):
@@ -782,7 +790,7 @@ def removeTile(card):
             FloodPile.remove(card)
             CurrentGameTile[i] = 'Flooded'
     #Check if a player is on flooded tile
-            for i in range(1,5):
+            for i in range(1,NumPlayers+1):
                 tplayer = 'c' + str(i) + 'label' #target player
                 xvalue = globals()[target].winfo_x() #x and y of mapcard
                 yvalue = globals()[target].winfo_y()
@@ -886,20 +894,25 @@ def SetWaterMark():
 #------------------------------------------------------------------------------------------------------------------------------------
 def DiscardSelect():
     global CurrPlayer
+    unwanted = ''
     while len(C1) > 5:
-        unwanted = askstring(title="Discard",prompt='Player 1:' +str(C1))
+        while unwanted == '':
+            unwanted = askstring(title="Discard",prompt='Player 1:' +str(C1))
         C1.remove(unwanted)
         TreasureDiscard.append(unwanted)
-    while len(C1) > 5:
-        unwanted = askstring(title="Discard",prompt='Player 2:' +str(C2))
+    while len(C2) > 5:
+        while unwanted == '':
+            unwanted = askstring(title="Discard",prompt='Player 2:' +str(C2))
         C2.remove(unwanted)
         TreasureDiscard.append(unwanted)
     while len(C3) > 5:
-        unwanted = askstring(title="Discard",prompt='Player 3:' +str(C3))
+        while unwanted == '':
+            unwanted = askstring(title="Discard",prompt='Player 3:' +str(C3))
         C3.remove(unwanted)
         TreasureDiscard.append(unwanted)
     while len(C4) > 5:
-        unwanted = askstring(title="Discard",prompt='Player 4:' +str(C4))
+        while unwanted == '':
+            unwanted = askstring(title="Discard",prompt='Player 4:' +str(C4))
         C4.remove(unwanted)
         TreasureDiscard.append(unwanted)
 
@@ -2873,6 +2886,8 @@ def EndTurn():
     global ActionPoint
     global floodcardflag
     global heliflag
+    global TreasurePerTurn
+    TreasurePerTurn = True
     heliflag = True
     if floodcardflag == True:
         if CurrPlayer == 4:
