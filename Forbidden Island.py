@@ -2818,7 +2818,7 @@ def getinput():
     global C2Char
     global C3Char
     global C4Char
-    Difficulty = difficultyvariable.get() # 1 = Beginner, 2 = Novice, 3 = Medium, 4 = Hard, 5 = Legendary
+    WaterTick = difficultyvariable.get() # 1 = Beginner, 2 = Novice, 3 = Medium, 4 = Hard, 5 = Legendary
     NumPlayers = playernumvariable.get() #  2 = 2 players, 3 = 3 players, 4 = 4 players
 
     #Dealing Cards to Players
@@ -2868,8 +2868,9 @@ def getinput():
             C4Char= CurrentCharacter[temp]
             CurrentCharacter.remove(CurrentCharacter[temp])
     #Set WaterTick
-    WaterTick = Difficulty
-    if WaterTick == 2:
+    if  WaterTick == 1:
+        watertick.configure(image = water0)
+    elif WaterTick == 2:
         watertick.configure(image = water1)
     elif WaterTick == 3:
         watertick.configure(image = water2)
