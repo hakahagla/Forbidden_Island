@@ -8,7 +8,7 @@
 # 27th Apr 2022
 * Start created the various pages in tKinter
 * Camel case for variables, constants are in lowercase, classes is snake case
-* Absolute vs relative paths.. relative paths. 💡
+* Absolute vs relative paths.. relative paths. 💡 -> switch back to absolute path
 
 # 3rd May 2022
 * Assa is still trying to complete the main menu
