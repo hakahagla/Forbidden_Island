@@ -2881,6 +2881,12 @@ def getinput():
     SpawnPlayers()
     gamepage.tkraise()
 
+#------------------------------------------------------------------------------------------------------------------------------------ 
+def PrintCards():
+    global CurrPlayer
+    target = 'C' + str(CurrPlayer)
+    print('Player' + str(CurrPlayer) , 'Cards:' + str(globals()[target]))
+
 #------------------------------------------------------------------------------------------------------------------------------------  
 def EndTurn():
     global CurrPlayer
@@ -2985,6 +2991,10 @@ FloodButton.place(x = 100, y = 600)
 
 TreasureButton= Button(gamepage, image=hearthstone,command= DrawTreasure,borderwidth=0)
 TreasureButton.place(x = 100, y =500)
+
+#My Cards
+Cards = Button(gamepage, text = 'My Cards' , command = PrintCards)
+Cards.place(x = 700, y = 660)
 
 #Movement Buttons
 UpButton = Button(gamepage, text = 'Up', command = Up)
